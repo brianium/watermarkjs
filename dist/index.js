@@ -6,18 +6,17 @@ require("babelify/polyfill");
 var _libImage = require("./lib/image");
 
 var load = _libImage.load;
-var canvas = _libImage.canvas;
+var map = _libImage.map;
 
 var invoker = require("./lib/functions").invoker;
 
 function lowerRight(target, watermark) {
-  console.log(target, watermark);
   var context = target.getContext("2d");
   context.drawImage(watermark, target.width - watermark.width, target.height - watermark.height);
   return target;
 }
 
-load("http://images.clipartpanda.com/earth-clipart-yckMB7XcE.png", "http://www.fresnostate.edu/csm/ees/images/earth.jpg").then(canvas).then(invoker(lowerRight)).then(function (c) {
+load(["http://images.clipartpanda.com/earth-clipart-yckMB7XcE.png", "http://www.fresnostate.edu/csm/ees/images/earth.jpg"]).then(map).then(invoker(lowerRight)).then(function (c) {
   document.body.appendChild(c);
 });
 
@@ -52,9 +51,12 @@ function invoker(fn) {
 exports.imageToCanvas = imageToCanvas;
 
 /**
- * Load a collection of urls
+ * Load a collection of urls. Images are loaded asynchronously,
+ * but the resulting promise is resolved with the original order
+ * of urls.
  *
- * @param {...urls} images
+ * @param {Array} images
+ * @param {Function} before - an optional image initializer
  * @return {Promise}
  */
 exports.load = load;
@@ -66,7 +68,7 @@ exports.load = load;
  * @param {Array} images
  * @return {Array}
  */
-exports.canvas = canvas;
+exports.map = map;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -81,36 +83,29 @@ function imageToCanvas(img) {
   return canvas;
 }
 
-function load() {
-  for (var _len = arguments.length, urls = Array(_len), _key = 0; _key < _len; _key++) {
-    urls[_key] = arguments[_key];
-  }
-
-  var loaded = 0;
-  var images = new Array(urls.length);
+function load(urls, before) {
+  var images = new Array(urls.length),
+      loaded = 0;
 
   return new Promise(function (resolve, reject) {
     for (var i = 0; i < urls.length; i++) {
-      (function () {
-        var img = new Image();
+      var img = new Image();
 
-        img.onload = (function (index) {
-          return function () {
-            loaded++;
-            images[index] = img;
-            if (loaded === urls.length) {
-              resolve(images);
-            }
-          };
-        })(i);
+      typeof before === "function" && before(img);
 
-        img.src = urls[i];
-      })();
+      img.onload = (function (index) {
+        return function () {
+          images[index] = this;
+          ++loaded === urls.length && resolve(images);
+        };
+      })(i);
+
+      img.src = urls[i];
     }
   });
 }
 
-function canvas(images) {
+function map(images) {
   return images.map(imageToCanvas);
 }
 
