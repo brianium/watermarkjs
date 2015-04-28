@@ -87,7 +87,7 @@ function load(urls, before) {
   var images = new Array(urls.length),
       loaded = 0;
 
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     for (var i = 0; i < urls.length; i++) {
       var img = new Image();
 
