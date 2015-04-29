@@ -1,2 +1,3 @@
-// this file is required by jest if you need to set global vars
-// or stubs
+window.atob = function(base64) {
+  return 'decoded!';
+}

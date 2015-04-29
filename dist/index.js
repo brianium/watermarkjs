@@ -10,17 +10,110 @@ var map = _libImage.map;
 
 var invoker = require("./lib/functions").invoker;
 
+var dataUrl = require("./lib/canvas").dataUrl;
+
+var blob = require("./lib/blob").blob;
+
 function lowerRight(target, watermark) {
   var context = target.getContext("2d");
-  context.drawImage(watermark, target.width - watermark.width, target.height - watermark.height);
+  context.drawImage(watermark, target.width - 50, target.height - 50);
   return target;
 }
 
-load(["http://images.clipartpanda.com/earth-clipart-yckMB7XcE.png", "http://www.fresnostate.edu/csm/ees/images/earth.jpg"]).then(map).then(invoker(lowerRight)).then(function (c) {
-  document.body.appendChild(c);
+var urls = ["http://www.html5rocks.com/static/images/profiles/monsurhossain.png", "http://www.html5rocks.com/static/images/profiles/mattgaunt.png"];
+
+load(urls, function (img) {
+  return img.crossOrigin = "anonymous";
+}).then(map).then(invoker(lowerRight)).then(dataUrl).then(blob).then(function (blob) {
+  return console.log(blob);
 });
 
-},{"./lib/functions":2,"./lib/image":3,"babelify/polyfill":8}],2:[function(require,module,exports){
+},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"babelify/polyfill":10}],2:[function(require,module,exports){
+
+
+/**
+ * Split a data url into a content type and raw data
+ *
+ * @param {String} dataUrl
+ * @return {Array}
+ */
+"use strict";
+
+exports.split = split;
+
+/**
+ * Decode a base64 string
+ *
+ * @param {String} base64
+ * @return {String}
+ */
+exports.decode = decode;
+
+/**
+ * Return a string of raw data as a Uint8Array
+ *
+ * @param {String} data
+ * @return {UInt8Array}
+ */
+exports.uint8 = uint8;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var sequence = require("../functions").sequence;
+
+var url = /^data:([^;]+);base64,(.*)$/;
+function split(dataUrl) {
+  return url.exec(dataUrl).slice(1);
+}
+
+function decode(base64) {
+  return window.atob(base64);
+}
+
+function uint8(data) {
+  var length = data.length;
+  var uints = new Uint8Array(length);
+
+  for (var i = 0; i < length; i++) {
+    uints[i] = data.charCodeAt(i);
+  }
+
+  return uints;
+}
+
+/**
+ * Turns a data url into a blob object.
+ *
+ * @param {String} dataUrl
+ * @return {Blob}
+ */
+var blob = sequence(split, function (parts) {
+  return [decode(parts[1]), parts[0]];
+}, function (blob) {
+  return new Blob([uint8(blob[0])], { type: blob[1] });
+});
+exports.blob = blob;
+
+},{"../functions":4}],3:[function(require,module,exports){
+/**
+ * Get the data url of a canvas
+ *
+ * @param {HTMLCanvasElement}
+ * @return {String}
+ */
+"use strict";
+
+exports.dataUrl = dataUrl;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function dataUrl(canvas) {
+  return canvas.toDataURL();
+}
+
+},{}],4:[function(require,module,exports){
 /**
  * Returns a function that invokes the given function
  * with an array of arguments.
@@ -31,6 +124,15 @@ load(["http://images.clipartpanda.com/earth-clipart-yckMB7XcE.png", "http://www.
 "use strict";
 
 exports.invoker = invoker;
+
+/**
+ * Return a function that executes a sequence of functions from left to right,
+ * passing the result of a previous operation to the next.
+ *
+ * @param {...funcs}
+ * @return {Function}
+ */
+exports.sequence = sequence;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -41,15 +143,42 @@ function invoker(fn) {
   };
 }
 
-},{}],3:[function(require,module,exports){
-/**
- * @param {Image} img
- * @return {HTMLCanvasElement}
- */
-"use strict";
+function sequence() {
+  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
 
-exports.imageToCanvas = imageToCanvas;
+  return function (value) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
 
+    try {
+      for (var _iterator = funcs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var fn = _step.value;
+
+        value = fn.call(null, value);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"]) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return value;
+  };
+}
+
+},{}],5:[function(require,module,exports){
 /**
  * Load a collection of urls. Images are loaded asynchronously,
  * but the resulting promise is resolved with the original order
@@ -59,7 +188,15 @@ exports.imageToCanvas = imageToCanvas;
  * @param {Function} before - an optional image initializer
  * @return {Promise}
  */
+"use strict";
+
 exports.load = load;
+
+/**
+ * @param {Image} img
+ * @return {HTMLCanvasElement}
+ */
+exports.imageToCanvas = imageToCanvas;
 
 /**
  * Convert an array of image objects
@@ -72,16 +209,6 @@ exports.map = map;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-function imageToCanvas(img) {
-  var canvas = document.createElement("canvas");
-  var ctx = canvas.getContext("2d");
-
-  canvas.width = img.width;
-  canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
-  return canvas;
-}
 
 function load(urls, before) {
   var images = new Array(urls.length),
@@ -105,11 +232,21 @@ function load(urls, before) {
   });
 }
 
+function imageToCanvas(img) {
+  var canvas = document.createElement("canvas");
+  var ctx = canvas.getContext("2d");
+
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0);
+  return canvas;
+}
+
 function map(images) {
   return images.map(imageToCanvas);
 }
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -122,7 +259,7 @@ require("core-js/shim");
 
 require("regenerator-babel/runtime");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":5,"regenerator-babel/runtime":6}],5:[function(require,module,exports){
+},{"core-js/shim":7,"regenerator-babel/runtime":8}],7:[function(require,module,exports){
 /**
  * Core.js 0.6.1
  * https://github.com/zloirock/core-js
@@ -2101,7 +2238,7 @@ $define(GLOBAL + BIND, {
   Iterators.NodeList = Iterators[ARRAY];
 }(global.NodeList);
 }(typeof self != 'undefined' && self.Math === Math ? self : Function('return this')(), true);
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -2642,10 +2779,10 @@ $define(GLOBAL + BIND, {
 );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = require("./lib/babel/polyfill");
 
-},{"./lib/babel/polyfill":4}],8:[function(require,module,exports){
+},{"./lib/babel/polyfill":6}],10:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":7}]},{},[1]);
+},{"babel-core/polyfill":9}]},{},[1]);
