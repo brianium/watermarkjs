@@ -6,7 +6,7 @@ require("babelify/polyfill");
 var _libImage = require("./lib/image");
 
 var load = _libImage.load;
-var map = _libImage.map;
+var mapToCanvas = _libImage.mapToCanvas;
 
 var invoker = require("./lib/functions").invoker;
 
@@ -14,21 +14,17 @@ var dataUrl = require("./lib/canvas").dataUrl;
 
 var blob = require("./lib/blob").blob;
 
-function lowerRight(target, watermark) {
-  var context = target.getContext("2d");
-  context.drawImage(watermark, target.width - 50, target.height - 50);
-  return target;
-}
+var lowerRight = require("./lib/position").lowerRight;
 
 var urls = ["http://www.html5rocks.com/static/images/profiles/monsurhossain.png", "http://www.html5rocks.com/static/images/profiles/mattgaunt.png"];
 
 load(urls, function (img) {
   return img.crossOrigin = "anonymous";
-}).then(map).then(invoker(lowerRight)).then(dataUrl).then(blob).then(function (blob) {
+}).then(mapToCanvas).then(invoker(lowerRight)).then(dataUrl).then(blob).then(function (blob) {
   return console.log(blob);
 });
 
-},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"babelify/polyfill":10}],2:[function(require,module,exports){
+},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/position":6,"babelify/polyfill":11}],2:[function(require,module,exports){
 
 
 /**
@@ -205,7 +201,7 @@ exports.imageToCanvas = imageToCanvas;
  * @param {Array} images
  * @return {Array}
  */
-exports.map = map;
+exports.mapToCanvas = mapToCanvas;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -242,11 +238,34 @@ function imageToCanvas(img) {
   return canvas;
 }
 
-function map(images) {
+function mapToCanvas(images) {
   return images.map(imageToCanvas);
 }
 
 },{}],6:[function(require,module,exports){
+
+/**
+ * Place the watermark in the lower right corner of the target
+ * image.
+ *
+ * @param {HTMLCanvasElement} target
+ * @param {HTMLCanvasElement} watermark
+ * @return {HTMLCanvasElement}
+ */
+"use strict";
+
+exports.lowerRight = lowerRight;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function lowerRight(target, watermark) {
+  var context = target.getContext("2d");
+  context.drawImage(watermark, target.width - 50, target.height - 50);
+  return target;
+}
+
+},{}],7:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -259,7 +278,7 @@ require("core-js/shim");
 
 require("regenerator-babel/runtime");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":7,"regenerator-babel/runtime":8}],7:[function(require,module,exports){
+},{"core-js/shim":8,"regenerator-babel/runtime":9}],8:[function(require,module,exports){
 /**
  * Core.js 0.6.1
  * https://github.com/zloirock/core-js
@@ -2238,7 +2257,7 @@ $define(GLOBAL + BIND, {
   Iterators.NodeList = Iterators[ARRAY];
 }(global.NodeList);
 }(typeof self != 'undefined' && self.Math === Math ? self : Function('return this')(), true);
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -2779,10 +2798,10 @@ $define(GLOBAL + BIND, {
 );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = require("./lib/babel/polyfill");
 
-},{"./lib/babel/polyfill":6}],10:[function(require,module,exports){
+},{"./lib/babel/polyfill":7}],11:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":9}]},{},[1]);
+},{"babel-core/polyfill":10}]},{},[1]);

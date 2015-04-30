@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "gulp",
-    "watch": "gulp watch"
+    "start": "gulp watch"
   },
   "repository": {
     "type": "git",

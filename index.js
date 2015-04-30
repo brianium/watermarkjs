@@ -1,15 +1,11 @@
 require('babelify/polyfill');
 
-import {load, map} from './lib/image';
+import {load, mapToCanvas} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl} from './lib/canvas';
 import {blob} from './lib/blob';
+import {lowerRight} from './lib/position';
 
-function lowerRight(target, watermark) {
-  let context = target.getContext('2d');
-  context.drawImage(watermark, target.width - 50, target.height - 50);
-  return target;
-}
 
 let urls = [
   'http://www.html5rocks.com/static/images/profiles/monsurhossain.png',
@@ -17,7 +13,7 @@ let urls = [
 ];
 
 load(urls, img => img.crossOrigin = 'anonymous')
-  .then(map)
+  .then(mapToCanvas)
   .then(invoker(lowerRight))
   .then(dataUrl)
   .then(blob)
