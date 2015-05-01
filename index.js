@@ -1,20 +1,50 @@
 require('babelify/polyfill');
-
 import {load, mapToCanvas} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl} from './lib/canvas';
 import {blob} from './lib/blob';
-import {lowerRight} from './lib/position';
 
+/**
+ * Return a watermark object.
+ *
+ * @param {Array} images
+ * @param {Function} init - optional
+ * @param {Promise} promise - optional
+ * @return {Object}
+ */
+export function watermark(images, init, promise) {
+  return {
 
-let urls = [
-  'http://www.html5rocks.com/static/images/profiles/monsurhossain.png',
-  'http://www.html5rocks.com/static/images/profiles/mattgaunt.png'
-];
+    /**
+     * Convert the watermark into a blob. The draw
+     * function is given all images as canvas elements in order.
+     *
+     * @param {Function} draw
+     * @return {Object}
+     */
+    asBlob(draw) {
+      let newPromise = load(images, init)
+        .then(mapToCanvas)
+        .then(invoker(draw))
+        .then(dataUrl)
+        .then(blob);
 
-load(urls, img => img.crossOrigin = 'anonymous')
-  .then(mapToCanvas)
-  .then(invoker(lowerRight))
-  .then(dataUrl)
-  .then(blob)
-  .then(blob => console.log(blob));
+      return watermark(images, init, newPromise);
+    },
+
+    /**
+     * Delegate to the watermark promise.
+     *
+     * @return {Promise}
+     */
+    then(...funcs) {
+      return promise.then.apply(promise, funcs);
+    }
+
+  };
+};
+
+/**
+ * Export to browser
+ */
+window.watermark = watermark;

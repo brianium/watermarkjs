@@ -1,6 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+
+/**
+ * Return a watermark object.
+ *
+ * @param {Array} images
+ * @param {Function} init - optional
+ * @param {Promise} promise - optional
+ * @return {Object}
+ */
 "use strict";
 
+exports.watermark = watermark;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 require("babelify/polyfill");
 
 var _libImage = require("./lib/image");
@@ -14,17 +28,46 @@ var dataUrl = require("./lib/canvas").dataUrl;
 
 var blob = require("./lib/blob").blob;
 
-var lowerRight = require("./lib/position").lowerRight;
+function watermark(images, init, promise) {
+  return {
 
-var urls = ["http://www.html5rocks.com/static/images/profiles/monsurhossain.png", "http://www.html5rocks.com/static/images/profiles/mattgaunt.png"];
+    /**
+     * Convert the watermark into a blob. The draw
+     * function is given all images as canvas elements in order.
+     *
+     * @param {Function} draw
+     * @return {Object}
+     */
+    asBlob: function asBlob(draw) {
+      var newPromise = load(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
 
-load(urls, function (img) {
-  return img.crossOrigin = "anonymous";
-}).then(mapToCanvas).then(invoker(lowerRight)).then(dataUrl).then(blob).then(function (blob) {
-  return console.log(blob);
-});
+      return watermark(images, init, newPromise);
+    },
 
-},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/position":6,"babelify/polyfill":11}],2:[function(require,module,exports){
+    /**
+     * Delegate to the watermark promise.
+     *
+     * @return {Promise}
+     */
+    then: function then() {
+      for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+        funcs[_key] = arguments[_key];
+      }
+
+      return promise.then.apply(promise, funcs);
+    }
+
+  };
+}
+
+;
+
+/**
+ * Export to browser
+ */
+window.watermark = watermark;
+
+},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"babelify/polyfill":10}],2:[function(require,module,exports){
 
 
 /**
@@ -243,29 +286,6 @@ function mapToCanvas(images) {
 }
 
 },{}],6:[function(require,module,exports){
-
-/**
- * Place the watermark in the lower right corner of the target
- * image.
- *
- * @param {HTMLCanvasElement} target
- * @param {HTMLCanvasElement} watermark
- * @return {HTMLCanvasElement}
- */
-"use strict";
-
-exports.lowerRight = lowerRight;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function lowerRight(target, watermark) {
-  var context = target.getContext("2d");
-  context.drawImage(watermark, target.width - 50, target.height - 50);
-  return target;
-}
-
-},{}],7:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -278,7 +298,7 @@ require("core-js/shim");
 
 require("regenerator-babel/runtime");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":8,"regenerator-babel/runtime":9}],8:[function(require,module,exports){
+},{"core-js/shim":7,"regenerator-babel/runtime":8}],7:[function(require,module,exports){
 /**
  * Core.js 0.6.1
  * https://github.com/zloirock/core-js
@@ -2257,7 +2277,7 @@ $define(GLOBAL + BIND, {
   Iterators.NodeList = Iterators[ARRAY];
 }(global.NodeList);
 }(typeof self != 'undefined' && self.Math === Math ? self : Function('return this')(), true);
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -2798,10 +2818,10 @@ $define(GLOBAL + BIND, {
 );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = require("./lib/babel/polyfill");
 
-},{"./lib/babel/polyfill":7}],11:[function(require,module,exports){
+},{"./lib/babel/polyfill":6}],10:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":10}]},{},[1]);
+},{"babel-core/polyfill":9}]},{},[1]);

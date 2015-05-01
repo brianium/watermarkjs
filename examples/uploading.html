@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Testing Loading</title>
+    <script src="/dist/index.js"></script>
+  </head>
+  <body>
+    <h1>Uploading a watermarked image</h1>
+    <img style="display:block;" id="composite" />
+    <progress min="0" max="100" value="0">0% complete</progress>
+    <script>
+
+    /**
+     * Amazon S3 policy and signature required for client side upload.
+     *
+     * For more information on policy documents check out Amazon docs.
+     * https://aws.amazon.com/articles/1434#policydocument
+     *
+     * For a helpful tool for generating the policy and signature, check out policy-signer on GitHub
+     * https://github.com/brianium/policy-signer
+     *
+     * You will need an S3 bucket of your own for this example, but there is a free tier!
+     */
+    var policy = 'policy',
+        signature = 'signature';
+
+    /**
+     * Kudos to html5rocks for supporting CORS everywhere. The main image is a picture of Monsur Hossain
+     * and the watermark image is an icon for HTML5 connectivity. Totally arbitrary, but demonstrates things
+     * nicely.
+     */
+    var urls = [
+      'http://www.html5rocks.com/static/images/profiles/monsurhossain.png',
+      'http://www.html5rocks.com/static/images/identity/classes_64/HTML5_Connectivity_64.png'
+    ];
+
+    /********************************************
+     * Generate the watermark and upload it.
+     *
+     * All supporting functions are defined below. Supporting functions
+     * handle initializing html Image resources as well has handling
+     * an upload to Amazon S3
+     ********************************************/
+    watermark(urls, crossOrigin)
+      .asBlob(lowerRight)
+      .then(upload);
+
+
+    /**
+     * Initializer to force cross origin fetching of images.
+     *
+     * @param {Image} img
+     */
+    function crossOrigin(img) {
+      img.crossOrigin = 'anonymous';
+    }
+
+    /**
+     * Place the watermark in the lower right corner of the target.
+     *
+     * @param {HTMLCanvasElement} target
+     * @param {HTMLCanvasElement} watermark
+     * @return {HTMLCanvasElement}
+     */
+    function lowerRight(target, watermark) {
+      var context = target.getContext('2d');
+      context.drawImage(watermark, target.width - 50, target.height - 50);
+      return target;
+    }
+
+    /**
+     * Return a function capable of updating progress.
+     *
+     * @param {HTMLProgressElement}
+     * @return {Function}
+     */
+    function progressHandler(progressBar) {
+      return function(e) {
+        if (e.lengthComputable) {
+          progressBar.value = (e.loaded / e.total) * 100;
+        }
+      }
+    }
+
+    /**
+     * Return a function that inserts the composite image.
+     */
+    function completeHandler(image, key) {
+      return function() {
+        image.src = 'https://s3-us-west-2.amazonaws.com/watermarkjs/' + key;
+      }
+    }
+
+    /**
+     * Return a FormData object ready for uploading to S3.
+     *
+     * @param {Blob} blob
+     * @param {String} key
+     * @return {FormData}
+     */
+    function getFormData(blob, key) {
+      var fd = new FormData(),
+          params = {
+            key: key,
+            AWSAccessKeyId: 'AKIAJLA5XUCTSVCXRKIA',
+            acl: 'private',
+            policy: policy,
+            signature: signature,
+            'Content-Type': '$Content-Type',
+            file: [blob, 'watermark.png']
+          };
+
+      for (var k in params) {
+        var args = Array.isArray(params[k]) ? params[k] : [params[k]];
+        fd.append.apply(fd, [k].concat(args));
+      }
+
+      return fd;
+    }
+
+    /**
+     * Upload the watermarked image to S3
+     *
+     * @param {Blob} blob
+     */
+    function upload(blob) {
+      var req = new XMLHttpRequest(),
+          key = "watermark-" + Math.random().toString(36),
+          fd = getFormData(blob, key);
+      req.open('POST', 'https://watermarkjs.s3.amazonaws.com/', true);
+      req.upload.onprogress = progressHandler(document.querySelector('progress'));
+      req.upload.onload = completeHandler(document.getElementById('composite'), key);
+      req.send(fd);
+    }
+
+    </script>
+  </body>
+</html>
