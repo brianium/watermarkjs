@@ -21,6 +21,7 @@ var _libImage = require("./lib/image");
 
 var load = _libImage.load;
 var mapToCanvas = _libImage.mapToCanvas;
+var fromFiles = _libImage.fromFiles;
 
 var invoker = require("./lib/functions").invoker;
 
@@ -29,6 +30,7 @@ var dataUrl = require("./lib/canvas").dataUrl;
 var blob = require("./lib/blob").blob;
 
 function watermark(images, init, promise) {
+  var loadFn = typeof images[0] === "string" ? load : fromFiles;
   return {
 
     /**
@@ -39,7 +41,7 @@ function watermark(images, init, promise) {
      * @return {Object}
      */
     asBlob: function asBlob(draw) {
-      var newPromise = load(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
+      var newPromise = loadFn(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
 
       return watermark(images, init, newPromise);
     },
@@ -223,7 +225,7 @@ function sequence() {
  * but the resulting promise is resolved with the original order
  * of urls.
  *
- * @param {Array} images
+ * @param {Array} urls
  * @param {Function} before - an optional image initializer
  * @return {Promise}
  */
@@ -232,10 +234,21 @@ function sequence() {
 exports.load = load;
 
 /**
+ * Convert an Image object to a canvas.
+ *
  * @param {Image} img
  * @return {HTMLCanvasElement}
  */
 exports.imageToCanvas = imageToCanvas;
+
+/**
+ * Return a collection of images from an
+ * array of File objects.
+ *
+ * @param {Array} files
+ * @return {Array}
+ */
+exports.fromFiles = fromFiles;
 
 /**
  * Convert an array of image objects
@@ -279,6 +292,30 @@ function imageToCanvas(img) {
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
   return canvas;
+}
+
+function fromFiles(files) {
+  var images = new Array(files.length),
+      loaded = 0;
+
+  return new Promise(function (resolve) {
+    for (var i = 0; i < files.length; i++) {
+      (function () {
+        var img = new Image();
+
+        var reader = new FileReader();
+        reader.onloadend = (function (index) {
+          return function () {
+            img.src = reader.result;
+            images[index] = img;
+            ++loaded === files.length && resolve(images);
+          };
+        })(i);
+
+        reader.readAsDataURL(files[i]);
+      })();
+    }
+  });
 }
 
 function mapToCanvas(images) {

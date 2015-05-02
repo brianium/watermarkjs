@@ -1,5 +1,5 @@
 require('babelify/polyfill');
-import {load, mapToCanvas} from './lib/image';
+import {load, mapToCanvas, fromFiles} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl} from './lib/canvas';
 import {blob} from './lib/blob';
@@ -13,6 +13,7 @@ import {blob} from './lib/blob';
  * @return {Object}
  */
 export function watermark(images, init, promise) {
+  let loadFn = typeof(images[0]) === 'string' ? load : fromFiles;
   return {
 
     /**
@@ -23,7 +24,7 @@ export function watermark(images, init, promise) {
      * @return {Object}
      */
     asBlob(draw) {
-      let newPromise = load(images, init)
+      let newPromise = loadFn(images, init)
         .then(mapToCanvas)
         .then(invoker(draw))
         .then(dataUrl)
