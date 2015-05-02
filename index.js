@@ -13,7 +13,17 @@ import {blob} from './lib/blob';
  * @return {Object}
  */
 export function watermark(images, init, promise) {
-  let loadFn = typeof(images[0]) === 'string' ? load : fromFiles;
+
+  /**
+   * The function used for getting image objects. If a list of strings
+   * is given, it will assume they are urls pointing to remote images. Otherwise
+   * File objects are assumed.
+   *
+   * @param {Array} filesOrUrls
+   * @return {Promise}
+   */
+  let getImages = typeof(images[0]) === 'string' ? load : fromFiles;
+
   return {
 
     /**
@@ -24,7 +34,7 @@ export function watermark(images, init, promise) {
      * @return {Object}
      */
     asBlob(draw) {
-      let newPromise = loadFn(images, init)
+      let newPromise = getImages(images, init)
         .then(mapToCanvas)
         .then(invoker(draw))
         .then(dataUrl)
