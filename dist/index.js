@@ -30,7 +30,17 @@ var dataUrl = require("./lib/canvas").dataUrl;
 var blob = require("./lib/blob").blob;
 
 function watermark(images, init, promise) {
-  var loadFn = typeof images[0] === "string" ? load : fromFiles;
+
+  /**
+   * The function used for getting image objects. If a list of strings
+   * is given, it will assume they are urls pointing to remote images. Otherwise
+   * File objects are assumed.
+   *
+   * @param {Array} filesOrUrls
+   * @return {Promise}
+   */
+  var getImages = typeof images[0] === "string" ? load : fromFiles;
+
   return {
 
     /**
@@ -41,7 +51,7 @@ function watermark(images, init, promise) {
      * @return {Object}
      */
     asBlob: function asBlob(draw) {
-      var newPromise = loadFn(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
+      var newPromise = getImages(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
 
       return watermark(images, init, newPromise);
     },

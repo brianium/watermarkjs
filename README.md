@@ -16,10 +16,10 @@ There is an npm script you can run to build:
 npm run build
 ```
 
-Or to kick off the file watcher and build as you make changes, run the dev task:
+Or to kick off the file watcher and build as you make changes, run the start task:
 
 ```
-npm run watch
+npm start
 ```
 
 ##Testing
