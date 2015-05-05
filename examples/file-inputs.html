@@ -53,8 +53,9 @@
         document.getElementById('watermark').files[0]
       ];
 
-      watermark(files)
-        .asBlob(lowerRight)
+      watermark()
+        .files(files)
+        .blob(lowerRight)
         .then(upload);
 
       e.preventDefault();
