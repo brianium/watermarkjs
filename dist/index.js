@@ -230,6 +230,8 @@ function sequence() {
 }
 
 },{}],5:[function(require,module,exports){
+
+
 /**
  * Load a collection of urls. Images are loaded asynchronously,
  * but the resulting promise is resolved with the original order
@@ -244,14 +246,6 @@ function sequence() {
 exports.load = load;
 
 /**
- * Convert an Image object to a canvas.
- *
- * @param {Image} img
- * @return {HTMLCanvasElement}
- */
-exports.imageToCanvas = imageToCanvas;
-
-/**
  * Return a collection of images from an
  * array of File objects.
  *
@@ -259,6 +253,14 @@ exports.imageToCanvas = imageToCanvas;
  * @return {Array}
  */
 exports.fromFiles = fromFiles;
+
+/**
+ * Convert an Image object to a canvas.
+ *
+ * @param {Image} img
+ * @return {HTMLCanvasElement}
+ */
+exports.imageToCanvas = imageToCanvas;
 
 /**
  * Convert an array of image objects
@@ -271,27 +273,58 @@ exports.mapToCanvas = mapToCanvas;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+/**
+ * Used for loading image resources asynchronously and maintaining
+ * the supplied order of arguments.
+ *
+ * @param {Array} resources - an array of strings or blobs
+ * @param {Function} invoked to return a promise
+ * @param {Function} a constructor function for creating an event emitting object
+ * @return {Promise}
+ */
+function asyncLoad(resources, cb, eventEmitter) {
+  var promises = [];
+  for (var i = 0; i < resources.length; i++) {
+    var image = new Image();
+    var emitter = eventEmitter ? new eventEmitter() : image;
+    var promise = cb(emitter, i, image);
+    promises.push(promise);
+  }
+  return Promise.all(promises);
+}
 
+/**
+ * Set the src of an image object and call the resolve function.
+ *
+ * @param {Image} img
+ * @param {String} src
+ * @param {Function} resolve
+ */
+function setAndResolve(img, src, resolve) {
+  img.src = src;
+  resolve(img);
+}
 function load(urls, before) {
-  var images = new Array(urls.length),
-      loaded = 0;
-
-  return new Promise(function (resolve) {
-    for (var i = 0; i < urls.length; i++) {
-      var img = new Image();
-
-      typeof before === "function" && before(img);
-
-      img.onload = (function (index) {
-        return function () {
-          images[index] = this;
-          ++loaded === urls.length && resolve(images);
-        };
-      })(i);
-
-      img.src = urls[i];
-    }
+  return asyncLoad(urls, function (img, index) {
+    typeof before === "function" && before(img);
+    return new Promise(function (resolve) {
+      img.onload = function () {
+        return resolve(img);
+      };
+      img.src = urls[index];
+    });
   });
+}
+
+function fromFiles(files) {
+  return asyncLoad(files, function (reader, index, img) {
+    return new Promise(function (resolve) {
+      reader.onloadend = function () {
+        return setAndResolve(img, reader.result, resolve);
+      };
+      reader.readAsDataURL(files[index]);
+    });
+  }, FileReader);
 }
 
 function imageToCanvas(img) {
@@ -302,30 +335,6 @@ function imageToCanvas(img) {
   canvas.height = img.height;
   ctx.drawImage(img, 0, 0);
   return canvas;
-}
-
-function fromFiles(files) {
-  var images = new Array(files.length),
-      loaded = 0;
-
-  return new Promise(function (resolve) {
-    for (var i = 0; i < files.length; i++) {
-      (function () {
-        var img = new Image();
-
-        var reader = new FileReader();
-        reader.onloadend = (function (index) {
-          return function () {
-            img.src = reader.result;
-            images[index] = img;
-            ++loaded === files.length && resolve(images);
-          };
-        })(i);
-
-        reader.readAsDataURL(files[i]);
-      })();
-    }
-  });
 }
 
 function mapToCanvas(images) {
