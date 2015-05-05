@@ -130,7 +130,7 @@
      */
     function upload(blob) {
       var req = new XMLHttpRequest(),
-          key = "watermark-" + Math.random().toString(36),
+          key = "watermark-" + Date.now().toString(),
           fd = getFormData(blob, key);
       req.open('POST', 'https://watermarkjs.s3.amazonaws.com/', true);
       req.upload.onprogress = progressHandler(document.querySelector('progress'));

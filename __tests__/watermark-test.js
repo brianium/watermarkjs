@@ -10,14 +10,10 @@ describe('watermark', function () {
     }
   };
 
-  beforeEach(function () {
-    load.mockReturnValueOnce(promise);
-  });
-
-  describe('.asBlob()', function () {
+  describe('.blob()', function () {
     it('returns a new object structure', function () {
-      let first = watermark(['url1', 'url2']);
-      let second = first.asBlob((one, two) => one.drawImage(two));
+      let first = watermark(promise);
+      let second = first.blob((one, two) => one.drawImage(two));
       expect(first).not.toBe(second);
     });
   });

@@ -4,8 +4,6 @@
 /**
  * Return a watermark object.
  *
- * @param {Array} images
- * @param {Function} init - optional
  * @param {Promise} promise - optional
  * @return {Object}
  */
@@ -27,19 +25,9 @@ var invoker = require("./lib/functions").invoker;
 
 var dataUrl = require("./lib/canvas").dataUrl;
 
-var blob = require("./lib/blob").blob;
+var mapToBlob = require("./lib/blob").blob;
 
-function watermark(images, init, promise) {
-
-  /**
-   * The function used for getting image objects. If a list of strings
-   * is given, it will assume they are urls pointing to remote images. Otherwise
-   * File objects are assumed.
-   *
-   * @param {Array} filesOrUrls
-   * @return {Promise}
-   */
-  var getImages = typeof images[0] === "string" ? load : fromFiles;
+function watermark(promise) {
 
   return {
 
@@ -50,10 +38,43 @@ function watermark(images, init, promise) {
      * @param {Function} draw
      * @return {Object}
      */
-    asBlob: function asBlob(draw) {
-      var newPromise = getImages(images, init).then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(blob);
+    blob: function blob(draw) {
+      var promise = this.then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(mapToBlob);
 
-      return watermark(images, init, newPromise);
+      return watermark(promise);
+    },
+
+    /**
+     * Load an array of image urls.
+     *
+     * @param {Array} urls
+     * @param {Function} init
+     * @return {Object}
+     */
+    urls: (function (_urls) {
+      var _urlsWrapper = function urls(_x, _x2) {
+        return _urls.apply(this, arguments);
+      };
+
+      _urlsWrapper.toString = function () {
+        return _urls.toString();
+      };
+
+      return _urlsWrapper;
+    })(function (urls, init) {
+      var promise = load(urls, init);
+      return watermark(promise);
+    }),
+
+    /**
+     * Load an array of file objects.
+     *
+     * @param {Array} fileObjects
+     * @return {Object}
+     */
+    files: function files(fileObjects) {
+      var promise = fromFiles(fileObjects);
+      return watermark(promise);
     },
 
     /**

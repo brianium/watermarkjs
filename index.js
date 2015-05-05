@@ -2,27 +2,15 @@ require('babelify/polyfill');
 import {load, mapToCanvas, fromFiles} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl} from './lib/canvas';
-import {blob} from './lib/blob';
+import {blob as mapToBlob} from './lib/blob';
 
 /**
  * Return a watermark object.
  *
- * @param {Array} images
- * @param {Function} init - optional
  * @param {Promise} promise - optional
  * @return {Object}
  */
-export function watermark(images, init, promise) {
-
-  /**
-   * The function used for getting image objects. If a list of strings
-   * is given, it will assume they are urls pointing to remote images. Otherwise
-   * File objects are assumed.
-   *
-   * @param {Array} filesOrUrls
-   * @return {Promise}
-   */
-  let getImages = typeof(images[0]) === 'string' ? load : fromFiles;
+export function watermark(promise) {
 
   return {
 
@@ -33,14 +21,37 @@ export function watermark(images, init, promise) {
      * @param {Function} draw
      * @return {Object}
      */
-    asBlob(draw) {
-      let newPromise = getImages(images, init)
+    blob(draw) {
+      let promise = this
         .then(mapToCanvas)
         .then(invoker(draw))
         .then(dataUrl)
-        .then(blob);
+        .then(mapToBlob);
 
-      return watermark(images, init, newPromise);
+      return watermark(promise);
+    },
+
+    /**
+     * Load an array of image urls.
+     *
+     * @param {Array} urls
+     * @param {Function} init
+     * @return {Object}
+     */
+    urls(urls, init) {
+      let promise = load(urls, init);
+      return watermark(promise);
+    },
+
+    /**
+     * Load an array of file objects.
+     *
+     * @param {Array} fileObjects
+     * @return {Object}
+     */
+    files(fileObjects) {
+      let promise = fromFiles(fileObjects);
+      return watermark(promise);
     },
 
     /**
