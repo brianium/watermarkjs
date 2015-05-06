@@ -1,7 +1,7 @@
 require('babelify/polyfill');
-import {load, mapToCanvas, fromFiles} from './lib/image';
+import {load, mapToCanvas, fromFiles, createImage} from './lib/image';
 import {invoker} from './lib/functions';
-import {dataUrl} from './lib/canvas';
+import {dataUrl as mapToDataUrl} from './lib/canvas';
 import {blob as mapToBlob} from './lib/blob';
 
 /**
@@ -15,18 +15,40 @@ export function watermark(promise) {
   return {
 
     /**
-     * Convert the watermark into a blob. The draw
+     * Convert the watermarked image into a dataUrl. The draw
      * function is given all images as canvas elements in order.
      *
      * @param {Function} draw
      * @return {Object}
      */
-    blob(draw) {
+    dataUrl(draw) {
       let promise = this
         .then(mapToCanvas)
         .then(invoker(draw))
-        .then(dataUrl)
+        .then(mapToDataUrl);
+
+      return new watermark(promise);
+    },
+
+    /**
+     * Convert the watermark into a blob.
+     *
+     * @param {Function} draw
+     * @return {Object}
+     */
+    blob(draw) {
+      this.dataUrl(draw)
         .then(mapToBlob);
+
+      return watermark(promise);
+    },
+
+    /**
+     * Convert the watermark into an image
+     */
+    image(draw) {
+      this.dataUrl(draw)
+        .then(createImage);
 
       return watermark(promise);
     },
