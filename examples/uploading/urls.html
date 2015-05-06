@@ -42,8 +42,7 @@
      * handle initializing html Image resources as well has handling
      * an upload to Amazon S3
      ********************************************/
-    watermark()
-      .urls(urls, crossOrigin)
+    watermark(urls, crossOrigin)
       .blob(lowerRight)
       .then(upload);
 

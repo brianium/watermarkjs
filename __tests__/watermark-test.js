@@ -15,12 +15,30 @@ describe('watermark', function () {
   };
 
   beforeEach(function () {
+    load.mockReturnValueOnce(promise);
+    fromFiles.mockReturnValueOnce(promise);
+  });
 
+  it('can load urls', function () {
+    let urls = ['url1', 'url1'];
+    let init = () => console.log(initialized);
+
+    watermark(urls, init).dataUrl(jest.genMockFunction());
+
+    expect(load).toBeCalledWith(urls, init);
+  });
+
+  it('can load file objects', function () {
+    let files = [new File(), new File()];
+
+    watermark(files).dataUrl(jest.genMockFunction());
+
+    expect(fromFiles).toBeCalledWith(files, undefined);
   });
 
   describe('.dataUrl()', function () {
     it('returns a new object structure', function () {
-      let first = watermark(promise);
+      let first = watermark(['url1', 'url2'], () => {}, promise);
 
       let draw = jest.genMockFunction();
       draw.mockReturnValueOnce(promise);
@@ -35,7 +53,7 @@ describe('watermark', function () {
 
   describe('.blob()', function () {
     it('should delegate to the dataUrl function and map to a blob', function () {
-      let mark = watermark(promise);
+      let mark = watermark(['url1', 'url1'], () => {}, promise);
       mark.dataUrl = jest.genMockFunction();
       mark.dataUrl.mockReturnValueOnce(promise);
       let draw = jest.genMockFunction();
@@ -50,7 +68,7 @@ describe('watermark', function () {
 
   describe('.image()', function () {
     it('should delegate to the dataUrl function and map to an image', function () {
-      let mark = watermark(promise);
+      let mark = watermark(['url1', 'url1'], () => {}, promise);
       mark.dataUrl = jest.genMockFunction();
       mark.dataUrl.mockReturnValueOnce(promise);
       let draw = jest.genMockFunction();
@@ -60,28 +78,6 @@ describe('watermark', function () {
       expect(mark.dataUrl).toBeCalledWith(draw);
       expect(createImage).toBeCalled();
       expect(newMark).not.toBe(mark);
-    });
-  });
-
-  describe('.urls()', function () {
-    it('calls load and returns a new object structure', function () {
-      let first = watermark(promise);
-      let urls = ['url1', 'url2'];
-      let second = first.urls(urls);
-
-      expect(first).not.toBe(second);
-      expect(load).toBeCalledWith(urls, undefined);
-    });
-  });
-
-  describe('.files()', function () {
-    it('calls fromFiles and returns a new object structure', function () {
-      let first = watermark(promise);
-      let fileObjects = [{}, {}];
-      let second = first.files(fileObjects);
-
-      expect(first).not.toBe(second);
-      expect(fromFiles).toBeCalledWith(fileObjects);
     });
   });
 });

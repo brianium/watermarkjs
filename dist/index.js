@@ -4,6 +4,8 @@
 /**
  * Return a watermark object.
  *
+ * @param {Array} resources - a collection of urls or File objects
+ * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
  * @param {Promise} promise - optional
  * @return {Object}
  */
@@ -17,7 +19,7 @@ require("babelify/polyfill");
 
 var _libImage = require("./lib/image");
 
-var load = _libImage.load;
+var loadUrls = _libImage.load;
 var mapToCanvas = _libImage.mapToCanvas;
 var fromFiles = _libImage.fromFiles;
 var createImage = _libImage.createImage;
@@ -28,7 +30,9 @@ var mapToDataUrl = require("./lib/canvas").dataUrl;
 
 var mapToBlob = require("./lib/blob").blob;
 
-function watermark(promise) {
+function watermark(resources, init, promise) {
+
+  var load = typeof resources[0] === "string" ? loadUrls : fromFiles;
 
   return {
 
@@ -40,9 +44,9 @@ function watermark(promise) {
      * @return {Object}
      */
     dataUrl: function dataUrl(draw) {
-      var promise = this.then(mapToCanvas).then(invoker(draw)).then(mapToDataUrl);
+      var promise = load(resources, init).then(mapToCanvas).then(invoker(draw)).then(mapToDataUrl);
 
-      return new watermark(promise);
+      return new watermark(resources, init, promise);
     },
 
     /**
@@ -54,7 +58,7 @@ function watermark(promise) {
     blob: function blob(draw) {
       var promise = this.dataUrl(draw).then(mapToBlob);
 
-      return watermark(promise);
+      return watermark(resources, init, promise);
     },
 
     /**
@@ -63,40 +67,7 @@ function watermark(promise) {
     image: function image(draw) {
       var promise = this.dataUrl(draw).then(createImage);
 
-      return watermark(promise);
-    },
-
-    /**
-     * Load an array of image urls.
-     *
-     * @param {Array} urls
-     * @param {Function} init
-     * @return {Object}
-     */
-    urls: (function (_urls) {
-      var _urlsWrapper = function urls(_x, _x2) {
-        return _urls.apply(this, arguments);
-      };
-
-      _urlsWrapper.toString = function () {
-        return _urls.toString();
-      };
-
-      return _urlsWrapper;
-    })(function (urls, init) {
-      var promise = load(urls, init);
-      return watermark(promise);
-    }),
-
-    /**
-     * Load an array of file objects.
-     *
-     * @param {Array} fileObjects
-     * @return {Object}
-     */
-    files: function files(fileObjects) {
-      var promise = fromFiles(fileObjects);
-      return watermark(promise);
+      return watermark(resources, init, promise);
     },
 
     /**
@@ -116,6 +87,29 @@ function watermark(promise) {
 }
 
 ;
+
+/**
+ * Load an array of image urls.
+ *
+ * @param {Array} urls
+ * @param {Function} init
+ * @return {Object}
+ */
+function urls(urls, init) {
+  var promise = loadUrls(urls, init);
+  return watermark(promise);
+}
+
+/**
+ * Load an array of file objects.
+ *
+ * @param {Array} fileObjects
+ * @return {Object}
+ */
+function files(fileObjects) {
+  var promise = fromFiles(fileObjects);
+  return watermark(promise);
+}
 
 /**
  * Export to browser
