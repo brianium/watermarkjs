@@ -70,29 +70,6 @@ export function watermark(resources, init, promise) {
 };
 
 /**
- * Load an array of image urls.
- *
- * @param {Array} urls
- * @param {Function} init
- * @return {Object}
- */
-function urls(urls, init) {
-  let promise = loadUrls(urls, init);
-  return watermark(promise);
-}
-
-/**
- * Load an array of file objects.
- *
- * @param {Array} fileObjects
- * @return {Object}
- */
-function files(fileObjects) {
-  let promise = fromFiles(fileObjects);
-  return watermark(promise);
-}
-
-/**
  * Export to browser
  */
 window.watermark = watermark;
