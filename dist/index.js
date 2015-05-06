@@ -20,10 +20,11 @@ var _libImage = require("./lib/image");
 var load = _libImage.load;
 var mapToCanvas = _libImage.mapToCanvas;
 var fromFiles = _libImage.fromFiles;
+var createImage = _libImage.createImage;
 
 var invoker = require("./lib/functions").invoker;
 
-var dataUrl = require("./lib/canvas").dataUrl;
+var mapToDataUrl = require("./lib/canvas").dataUrl;
 
 var mapToBlob = require("./lib/blob").blob;
 
@@ -32,14 +33,35 @@ function watermark(promise) {
   return {
 
     /**
-     * Convert the watermark into a blob. The draw
+     * Convert the watermarked image into a dataUrl. The draw
      * function is given all images as canvas elements in order.
      *
      * @param {Function} draw
      * @return {Object}
      */
+    dataUrl: function dataUrl(draw) {
+      var promise = this.then(mapToCanvas).then(invoker(draw)).then(mapToDataUrl);
+
+      return new watermark(promise);
+    },
+
+    /**
+     * Convert the watermark into a blob.
+     *
+     * @param {Function} draw
+     * @return {Object}
+     */
     blob: function blob(draw) {
-      var promise = this.then(mapToCanvas).then(invoker(draw)).then(dataUrl).then(mapToBlob);
+      var promise = this.dataUrl(draw).then(mapToBlob);
+
+      return watermark(promise);
+    },
+
+    /**
+     * Convert the watermark into an image
+     */
+    image: function image(draw) {
+      var promise = this.dataUrl(draw).then(createImage);
 
       return watermark(promise);
     },
@@ -254,6 +276,17 @@ function sequence() {
 
 
 /**
+ * Create a new image, optionally configuring it's onload behavior.
+ *
+ * @param {String} url
+ * @param {Function} onload
+ * @return {Image}
+ */
+"use strict";
+
+exports.createImage = createImage;
+
+/**
  * Load a collection of urls. Images are loaded asynchronously,
  * but the resulting promise is resolved with the original order
  * of urls.
@@ -262,8 +295,6 @@ function sequence() {
  * @param {Function} before - an optional image initializer
  * @return {Promise}
  */
-"use strict";
-
 exports.load = load;
 
 /**
@@ -325,6 +356,15 @@ function setAndResolve(img, src, resolve) {
   img.src = src;
   resolve(img);
 }
+function createImage(url, onload) {
+  var img = new Image();
+  if (typeof onload === "function") {
+    img.onload = onload;
+  }
+  img.src = url;
+  return img;
+}
+
 function load(urls, before) {
   return asyncLoad(urls, function (img, index) {
     typeof before === "function" && before(img);

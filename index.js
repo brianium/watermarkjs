@@ -37,7 +37,7 @@ export function watermark(promise) {
      * @return {Object}
      */
     blob(draw) {
-      this.dataUrl(draw)
+      let promise = this.dataUrl(draw)
         .then(mapToBlob);
 
       return watermark(promise);
@@ -47,7 +47,7 @@ export function watermark(promise) {
      * Convert the watermark into an image
      */
     image(draw) {
-      this.dataUrl(draw)
+      let promise = this.dataUrl(draw)
         .then(createImage);
 
       return watermark(promise);
