@@ -11,7 +11,7 @@
     <script>
 
     /**
-     * Amazon S3 policy and signature required for client side upload.
+     * Amazon S3 policy, signature, and access key id required for client side upload.
      *
      * For more information on policy documents check out Amazon docs.
      * https://aws.amazon.com/articles/1434#policydocument
@@ -22,7 +22,8 @@
      * You will need an S3 bucket of your own for this example, but there is a free tier!
      */
     var policy = 'policy',
-        signature = 'signature';
+        signature = 'signature',
+        accessKeyId = 'keyId';
 
     /**
      * Kudos to html5rocks for supporting CORS everywhere. The main image is a picture of Monsur Hossain
@@ -103,7 +104,7 @@
       var fd = new FormData(),
           params = {
             key: key,
-            AWSAccessKeyId: 'AKIAJLA5XUCTSVCXRKIA',
+            AWSAccessKeyId: accessKeyId,
             acl: 'private',
             policy: policy,
             signature: signature,
