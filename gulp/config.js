@@ -6,6 +6,7 @@ module.exports = {
   lib: lib,
   main: 'index.js',
   dist: 'dist',
+  examples: 'examples',
   watch: {
     paths: ['js'].reduce(function(paths, ext) {
       return paths.concat([lib + '/**/*.' + ext, lib + '/*.' + ext, 'index.js']);

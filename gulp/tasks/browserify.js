@@ -20,11 +20,12 @@ gulp.task('browserify', function() {
   return browserify('./' + config.main)
       .transform(babelify)
       .bundle()
-      .pipe(source(config.main))
+      .pipe(source('watermark.js'))
       .pipe(buffer())
       .pipe(rename(stripDirectory))
       .pipe(gulp.dest(config.dist))
       .pipe(rename({suffix: '.min'}))
       .pipe(uglify())
-      .pipe(gulp.dest(config.dist));
+      .pipe(gulp.dest(config.dist))
+      .pipe(gulp.dest(config.examples + '/scripts'))
 });

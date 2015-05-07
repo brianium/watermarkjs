@@ -2,7 +2,7 @@
   "name": "watermarkjs",
   "version": "0.0.0",
   "description": "Watermarked images in the browser",
-  "main": "dist/index.js",
+  "main": "dist/watermark.js",
   "scripts": {
     "test": "jest",
     "build": "gulp",
