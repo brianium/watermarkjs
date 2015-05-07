@@ -4,5 +4,5 @@ var config = require('../config');
 var gulp = require('gulp');
 
 gulp.task('watch', ['build'], function() {
-  return gulp.watch(config.watch.paths, ['build']);
+  return gulp.watch(config.watch.paths, ['build', 'reload']);
 });

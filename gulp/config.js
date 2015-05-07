@@ -11,5 +11,13 @@ module.exports = {
     paths: ['js'].reduce(function(paths, ext) {
       return paths.concat([lib + '/**/*.' + ext, lib + '/*.' + ext, 'index.js']);
     }, [])
+  },
+  browserSync: {
+    server: {
+      baseDir: 'examples',
+      directory: true
+    },
+    startPath: '/index.html',
+    port: 8000
   }
 };
