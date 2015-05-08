@@ -5,10 +5,45 @@
   <meta charset="utf-8">
   <title>Examples</title>
   <script src="/scripts/watermark.min.js"></script>
+  <script src="/scripts/examples.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 </head>
 
 <body>
-  <h1>Hello World</h1>
+  <div class="container">
+    <h1 class="text-center">watermarkjs</h1>
+
+    <div class="col-xs-12 example">
+      <div class="example" id="composite-image">
+        <h2>Composite Images</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/shepherd.jpg', '/img/logo.png'])
+  .image(examples.lowerRight)
+  .then(function (img) {
+    document.getElementById('composite-image').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+      .image(examples.lowerRight)
+      .then(function (img) {
+        var pre = document.querySelector('#composite-image pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+  </script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
 </body>
 
 </html>

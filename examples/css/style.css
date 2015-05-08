@@ -1,0 +1,40 @@
+html,
+body {
+  background: url('img/purple.jpg') repeat left top;
+  font-family: 'Maven Pro', sans-serif;
+}
+
+h1 {
+  font-size: 72px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #fff;
+  font-family: 'Josefin Slab', serif;
+  text-shadow: 0 -1px #000;
+}
+
+img {
+  border: 0;
+}
+
+.example {
+  text-align: center;
+}
+
+.example pre {
+  background: transparent;
+  border: 0;
+  margin: 0 auto;
+  text-align: left;
+  width: 600px;
+}
+
+.example .hljs {
+  border-radius: 4px;
+}
+
+.example img {
+  border: 10px solid #fff;
+  box-shadow: 3px 6px 5px rgba(0, 0, 0, 0.3);
+}

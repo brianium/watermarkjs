@@ -40,7 +40,7 @@
    */
   examples.lowerRight = function lowerRight(target, watermark) {
     var context = target.getContext('2d');
-    context.drawImage(watermark, target.width - watermark.width, target.height - watermark.width);
+    context.drawImage(watermark, target.width - (watermark.width + 10), target.height - (watermark.height + 10));
     return target;
   };
 
