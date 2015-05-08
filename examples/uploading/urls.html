@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>Testing With URLs</title>
-    <script src="/dist/watermark.js"></script>
+    <script src="/scripts/watermark.min.js"></script>
   </head>
   <body>
     <h1>Uploading a watermarked image from urls</h1>
@@ -23,7 +23,7 @@
      */
     var policy = 'policy',
         signature = 'signature',
-        accessKeyId = 'keyId';
+        accessKeyId = 'key';
 
     /**
      * Kudos to html5rocks for supporting CORS everywhere. The main image is a picture of Monsur Hossain
@@ -88,7 +88,11 @@
      */
     function completeHandler(image, key) {
       return function() {
-        image.src = 'https://s3-us-west-2.amazonaws.com/watermarkjs/' + key;
+        //not sure why this is necessary, but without a small timeout there are occasional
+        // 403 responses from S3
+        setTimeout(function(){
+          image.src = 'https://s3-us-west-2.amazonaws.com/watermarkjs/' + key;
+        }, 250);
       }
     }
 
@@ -126,7 +130,7 @@
      */
     function upload(blob) {
       var req = new XMLHttpRequest(),
-          key = "watermark-" + Date.now().toString(),
+          key = "watermark-" + Date.now().toString() + '.png',
           fd = getFormData(blob, key);
       req.open('POST', 'https://watermarkjs.s3.amazonaws.com/', true);
       req.upload.onprogress = progressHandler(document.querySelector('progress'));

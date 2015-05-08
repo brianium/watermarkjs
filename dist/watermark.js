@@ -4,7 +4,7 @@
 /**
  * Return a watermark object.
  *
- * @param {Array} resources - a collection of urls or File objects
+ * @param {Array} resources - a collection of urls and File objects
  * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
  * @param {Promise} promise - optional
  * @return {Object}
@@ -19,9 +19,8 @@ require("babelify/polyfill");
 
 var _libImage = require("./lib/image");
 
-var loadUrls = _libImage.load;
+var load = _libImage.load;
 var mapToCanvas = _libImage.mapToCanvas;
-var fromFiles = _libImage.fromFiles;
 var createImage = _libImage.createImage;
 
 var invoker = require("./lib/functions").invoker;
@@ -31,8 +30,6 @@ var mapToDataUrl = require("./lib/canvas").dataUrl;
 var mapToBlob = require("./lib/blob").blob;
 
 function watermark(resources, init, promise) {
-
-  var load = typeof resources[0] === "string" ? loadUrls : fromFiles;
 
   return {
 
@@ -247,35 +244,43 @@ function sequence() {
 
 
 /**
+ * Used for loading image resources asynchronously and maintaining
+ * the supplied order of arguments.
+ *
+ * @param {Array} resources - a mixed array of urls and File objects
+ * @param {Function} init - called at the beginning of resource initialization
+ * @return {Promise}
+ */
+"use strict";
+
+exports.load = load;
+
+/**
+ * Load an image by its url.
+ *
+ * @param {String} url
+ * @param {Function} init - an optional image initializer
+ * @return {Promise}
+ */
+exports.loadUrl = loadUrl;
+
+/**
+ * Return a collection of images from an
+ * array of File objects.
+ *
+ * @param {File} file
+ * @return {Promise}
+ */
+exports.loadFile = loadFile;
+
+/**
  * Create a new image, optionally configuring it's onload behavior.
  *
  * @param {String} url
  * @param {Function} onload
  * @return {Image}
  */
-"use strict";
-
 exports.createImage = createImage;
-
-/**
- * Load a collection of urls. Images are loaded asynchronously,
- * but the resulting promise is resolved with the original order
- * of urls.
- *
- * @param {Array} urls
- * @param {Function} before - an optional image initializer
- * @return {Promise}
- */
-exports.load = load;
-
-/**
- * Return a collection of images from an
- * array of File objects.
- *
- * @param {Array} files
- * @return {Array}
- */
-exports.fromFiles = fromFiles;
 
 /**
  * Convert an Image object to a canvas.
@@ -297,23 +302,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 /**
- * Used for loading image resources asynchronously and maintaining
- * the supplied order of arguments.
+ * Given a resource, return an appropriate loading function for it's type.
  *
- * @param {Array} resources - an array of strings or blobs
- * @param {Function} invoked to return a promise
- * @param {Function} a constructor function for creating an event emitting object
- * @return {Promise}
+ * @param {String|File} resource
+ * @return {Function}
  */
-function asyncLoad(resources, cb, eventEmitter) {
-  var promises = [];
-  for (var i = 0; i < resources.length; i++) {
-    var image = new Image();
-    var emitter = eventEmitter ? new eventEmitter() : image;
-    var promise = cb(emitter, i, image);
-    promises.push(promise);
+function getLoader(resource) {
+  var type = typeof resource;
+
+  if (type === "string") {
+    return loadUrl;
   }
-  return Promise.all(promises);
+
+  return loadFile;
 }
 
 /**
@@ -327,6 +328,39 @@ function setAndResolve(img, src, resolve) {
   img.src = src;
   resolve(img);
 }
+function load(resources, init) {
+  var promises = [];
+  for (var i = 0; i < resources.length; i++) {
+    var resource = resources[i];
+    var loader = getLoader(resource);
+    var promise = loader(resource, init);
+    promises.push(promise);
+  }
+  return Promise.all(promises);
+}
+
+function loadUrl(url, init) {
+  var img = new Image();
+  typeof init === "function" && init(img);
+  return new Promise(function (resolve) {
+    img.onload = function () {
+      return resolve(img);
+    };
+    img.src = url;
+  });
+}
+
+function loadFile(file) {
+  var reader = new FileReader();
+  return new Promise(function (resolve) {
+    var img = new Image();
+    reader.onloadend = function () {
+      return setAndResolve(img, reader.result, resolve);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function createImage(url, onload) {
   var img = new Image();
   if (typeof onload === "function") {
@@ -334,29 +368,6 @@ function createImage(url, onload) {
   }
   img.src = url;
   return img;
-}
-
-function load(urls, before) {
-  return asyncLoad(urls, function (img, index) {
-    typeof before === "function" && before(img);
-    return new Promise(function (resolve) {
-      img.onload = function () {
-        return resolve(img);
-      };
-      img.src = urls[index];
-    });
-  });
-}
-
-function fromFiles(files) {
-  return asyncLoad(files, function (reader, index, img) {
-    return new Promise(function (resolve) {
-      reader.onloadend = function () {
-        return setAndResolve(img, reader.result, resolve);
-      };
-      reader.readAsDataURL(files[index]);
-    });
-  }, FileReader);
 }
 
 function imageToCanvas(img) {

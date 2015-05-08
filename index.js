@@ -1,5 +1,5 @@
 require('babelify/polyfill');
-import {load as loadUrls, mapToCanvas, fromFiles, createImage} from './lib/image';
+import {load, mapToCanvas, createImage} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl as mapToDataUrl} from './lib/canvas';
 import {blob as mapToBlob} from './lib/blob';
@@ -7,14 +7,12 @@ import {blob as mapToBlob} from './lib/blob';
 /**
  * Return a watermark object.
  *
- * @param {Array} resources - a collection of urls or File objects
+ * @param {Array} resources - a collection of urls and File objects
  * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
  * @param {Promise} promise - optional
  * @return {Object}
  */
 export function watermark(resources, init, promise) {
-
-  let load = (typeof(resources[0]) === 'string') ? loadUrls : fromFiles;
 
   return {
 

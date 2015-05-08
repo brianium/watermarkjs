@@ -3,7 +3,7 @@ jest.dontMock('../lib/functions')
 import {watermark} from '../index';
 import {dataUrl} from '../lib/canvas';
 import {blob} from '../lib/blob';
-import {load, fromFiles, mapToCanvas, createImage} from '../lib/image';
+import {load, mapToCanvas, createImage} from '../lib/image';
 
 describe('watermark', function () {
 
@@ -16,24 +16,15 @@ describe('watermark', function () {
 
   beforeEach(function () {
     load.mockReturnValueOnce(promise);
-    fromFiles.mockReturnValueOnce(promise);
   });
 
-  it('can load urls', function () {
-    let urls = ['url1', 'url1'];
+  it('can load urls and files', function () {
+    let urls = ['url1', new File()];
     let init = () => console.log(initialized);
 
     watermark(urls, init).dataUrl(jest.genMockFunction());
 
     expect(load).toBeCalledWith(urls, init);
-  });
-
-  it('can load file objects', function () {
-    let files = [new File(), new File()];
-
-    watermark(files).dataUrl(jest.genMockFunction());
-
-    expect(fromFiles).toBeCalledWith(files, undefined);
   });
 
   describe('.dataUrl()', function () {
