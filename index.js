@@ -3,6 +3,7 @@ import {load, mapToCanvas, createImage} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl as mapToDataUrl} from './lib/canvas';
 import {blob as mapToBlob} from './lib/blob';
+import * as position from './lib/position';
 
 /**
  * Return a watermark object.
@@ -66,6 +67,11 @@ export function watermark(resources, init, promise) {
 
   };
 };
+
+/**
+ * Utility functions
+ */
+watermark.position = position;
 
 /**
  * Export to browser

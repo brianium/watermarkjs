@@ -24,7 +24,7 @@
         <pre>
           <code class="javascript">
 watermark(['/img/shepherd.jpg', '/img/logo.png'])
-  .image(examples.lowerRight)
+  .image(watermark.position.lowerRight())
   .then(function (img) {
     document.getElementById('composite-image').appendChild(img);
   });
@@ -36,7 +36,7 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
 
   <script>
     watermark(['/img/shepherd.jpg', '/img/logo.png'])
-      .image(examples.lowerRight)
+      .image(watermark.position.lowerRight())
       .then(function (img) {
         var pre = document.querySelector('#composite-image pre');
         pre.parentNode.insertBefore(img, pre);

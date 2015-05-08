@@ -1,5 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
 
 /**
  * Return a watermark object.
@@ -9,8 +11,6 @@
  * @param {Promise} promise - optional
  * @return {Object}
  */
-"use strict";
-
 exports.watermark = watermark;
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -28,6 +28,8 @@ var invoker = require("./lib/functions").invoker;
 var mapToDataUrl = require("./lib/canvas").dataUrl;
 
 var mapToBlob = require("./lib/blob").blob;
+
+var position = _interopRequireWildcard(require("./lib/position"));
 
 function watermark(resources, init, promise) {
 
@@ -86,11 +88,16 @@ function watermark(resources, init, promise) {
 ;
 
 /**
+ * Utility functions
+ */
+watermark.position = position;
+
+/**
  * Export to browser
  */
 window.watermark = watermark;
 
-},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"babelify/polyfill":10}],2:[function(require,module,exports){
+},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/position":6,"babelify/polyfill":11}],2:[function(require,module,exports){
 
 
 /**
@@ -385,6 +392,34 @@ function mapToCanvas(images) {
 }
 
 },{}],6:[function(require,module,exports){
+
+/**
+ * Place the watermark in the lower right corner of the target
+ * image.
+ *
+ * @param {Number} alpha
+ * @return {Function}
+ */
+"use strict";
+
+exports.lowerRight = lowerRight;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function lowerRight(alpha) {
+  alpha || (alpha = 1);
+  return function (target, watermark) {
+    var context = target.getContext("2d");
+    context.globalAlpha = alpha;
+    context.drawImage(watermark, target.width - (watermark.width + 10), target.height - (watermark.height + 10));
+    return target;
+  };
+}
+
+;
+
+},{}],7:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -397,7 +432,7 @@ require("core-js/shim");
 
 require("regenerator-babel/runtime");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":7,"regenerator-babel/runtime":8}],7:[function(require,module,exports){
+},{"core-js/shim":8,"regenerator-babel/runtime":9}],8:[function(require,module,exports){
 /**
  * Core.js 0.6.1
  * https://github.com/zloirock/core-js
@@ -2376,7 +2411,7 @@ $define(GLOBAL + BIND, {
   Iterators.NodeList = Iterators[ARRAY];
 }(global.NodeList);
 }(typeof self != 'undefined' && self.Math === Math ? self : Function('return this')(), true);
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -2917,10 +2952,10 @@ $define(GLOBAL + BIND, {
 );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = require("./lib/babel/polyfill");
 
-},{"./lib/babel/polyfill":6}],10:[function(require,module,exports){
+},{"./lib/babel/polyfill":7}],11:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":9}]},{},[1]);
+},{"babel-core/polyfill":10}]},{},[1]);
