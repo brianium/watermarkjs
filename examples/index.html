@@ -18,7 +18,8 @@
   <div class="container">
     <h1 class="text-center">watermarkjs</h1>
 
-    <div class="col-xs-12 example">
+    <div class="col-xs-12">
+
       <div class="example" id="composite-image">
         <h2>Composite Images</h2>
         <pre>
@@ -31,6 +32,20 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
           </code>
         </pre>
       </div>
+
+      <div class="example" id="alpha-image">
+        <h2>Alpha Transparency</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/shepherd.jpg', '/img/logo.png'])
+  .image(watermark.position.lowerRight(0.5))
+  .then(function (img) {
+    document.getElementById('alpha-image').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
     </div>
   </div>
 
@@ -39,6 +54,13 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
       .image(watermark.position.lowerRight())
       .then(function (img) {
         var pre = document.querySelector('#composite-image pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+      .image(watermark.position.lowerRight(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#alpha-image pre');
         pre.parentNode.insertBefore(img, pre);
       });
   </script>
