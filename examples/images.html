@@ -99,6 +99,28 @@ watermark(['/img/coffee.jpg', '/img/logo.png'])
         </pre>
       </div>
 
+      <div class="example" id="arbitrary">
+        <h2>Arbitrary Positions</h2>
+        <pre>
+          <code class="javascript">
+var getX = function(boat, logo) {
+  return 73;
+};
+
+var getY = function(boat, logo) {
+  return 63;
+};
+
+// atPos is the basis for all positioning functions
+watermark(['/img/boat.jpg', '/img/logo.png'])
+  .image(watermark.image.atPos(getX, getY, 0.5))
+  .then(function (img) {
+    document.getElementById('arbitrary').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
 
     </div>
 
@@ -142,6 +164,22 @@ watermark(['/img/coffee.jpg', '/img/logo.png'])
       .image(watermark.image.center(0.5))
       .then(function (img) {
         var pre = document.querySelector('#center pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // position anywhere
+    var getX = function(boat, logo) {
+      return 73;
+    };
+
+    var getY = function(boat, logo) {
+      return 63;
+    };
+
+    watermark(['/img/boat.jpg', '/img/logo.png'])
+      .image(watermark.image.atPos(getX, getY, 0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#arbitrary pre');
         pre.parentNode.insertBefore(img, pre);
       });
   </script>
