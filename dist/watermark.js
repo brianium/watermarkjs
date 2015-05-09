@@ -413,6 +413,42 @@ exports.atPos = atPos;
  * @return {Function}
  */
 exports.lowerRight = lowerRight;
+
+/**
+ * Place the watermark in the upper right corner of the target
+ * image.
+ *
+ * @param {Number} alpha
+ * @return {Function}
+ */
+exports.upperRight = upperRight;
+
+/**
+ * Place the watermark in the lower left corner of the target
+ * image.
+ *
+ * @param {Number} alpha
+ * @return {Function}
+ */
+exports.lowerLeft = lowerLeft;
+
+/**
+ * Place the watermark in the upper left corner of the target
+ * image.
+ *
+ * @param {Number} alpha
+ * @return {Function}
+ */
+exports.upperLeft = upperLeft;
+
+/**
+ * Place the watermark in the center of the target
+ * image.
+ *
+ * @param {Number} alpha
+ * @return {Function}
+ */
+exports.center = center;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -432,6 +468,38 @@ function lowerRight(alpha) {
     return target.width - (mark.width + 10);
   }, function (target, mark) {
     return target.height - (mark.height + 10);
+  }, alpha);
+}
+
+function upperRight(alpha) {
+  return atPos(function (target, mark) {
+    return target.width - (mark.width + 10);
+  }, function (target, mark) {
+    return 10;
+  }, alpha);
+}
+
+function lowerLeft(alpha) {
+  return atPos(function (target, mark) {
+    return 10;
+  }, function (target, mark) {
+    return target.height - (mark.height + 10);
+  }, alpha);
+}
+
+function upperLeft(alpha) {
+  return atPos(function (target, mark) {
+    return 10;
+  }, function (target, mark) {
+    return 10;
+  }, alpha);
+}
+
+function center(alpha) {
+  return atPos(function (target, mark) {
+    return (target.width - mark.width) / 2;
+  }, function (target, mark) {
+    return (target.height - mark.height) / 2;
   }, alpha);
 }
 

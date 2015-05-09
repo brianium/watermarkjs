@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>watermarkjs - using images</title>
+  <script src="/scripts/watermark.min.js"></script>
+  <script src="/scripts/examples.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1 class="text-center"><a href="/">watermarkjs</a></h1>
+    <nav>
+      <ul>
+        <li><a href="images.html">images</a></li>
+        <li class="separator">-</li>
+        <li><a href="#">text</a></li>
+        <li class="separator">-</li>
+        <li><a href="#">uploading</a></li>
+      </ul>
+    </nav>
+
+    <div class="col-xs-12">
+      <p class="lead">
+        A common use case for watermarking is to lay one image on top of another. The following examples
+        demonstrate some of the pre-packaged image positioning functions that come with watermark.js
+      </p>
+
+      <div class="example" id="lower-right">
+        <h2>Lower Right</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/shepherd.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerRight(0.5))
+  .then(function (img) {
+    document.getElementById('lower-right').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="lower-left">
+        <h2>Lower Left</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/forest.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerLeft(0.5))
+  .then(function (img) {
+    document.getElementById('lower-left').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="upper-right">
+        <h2>Upper Right</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/forest.jpg', '/img/logo.png'])
+  .image(watermark.image.upperRight(0.5))
+  .then(function (img) {
+    document.getElementById('upper-right').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="upper-left">
+        <h2>Upper Left</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/wolf.jpg', '/img/logo.png'])
+  .image(watermark.image.upperLeft(0.5))
+  .then(function (img) {
+    document.getElementById('upper-left').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="center">
+        <h2>Center</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.center(0.5))
+  .then(function (img) {
+    document.getElementById('center').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <script>
+    // lower right positioning
+    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+      .image(watermark.image.lowerRight(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#lower-right pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // lower left positioning
+    watermark(['/img/forest.jpg', '/img/logo.png'])
+      .image(watermark.image.lowerLeft(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#lower-left pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // upper right positioning
+    watermark(['/img/field.jpg', '/img/logo.png'])
+      .image(watermark.image.upperRight(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#upper-right pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // upper left positioning
+    watermark(['/img/wolf.jpg', '/img/logo.png'])
+      .image(watermark.image.upperLeft(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#upper-left pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // upper left positioning
+    watermark(['/img/coffee.jpg', '/img/logo.png'])
+      .image(watermark.image.center(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#center pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+  </script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>

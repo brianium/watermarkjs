@@ -1,3 +1,14 @@
+a:link,
+a:visited {
+  color: #fff;
+  text-decoration: underline;
+}
+
+a:hover,
+a:active {
+  color: #A974C5;
+}
+
 html,
 body {
   background: url('img/purple.jpg') repeat left top;
@@ -8,6 +19,11 @@ h1 {
   font-size: 72px;
 }
 
+h1 a:link,
+h1 a:visited {
+  text-decoration: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: #fff;
   font-family: 'Josefin Slab', serif;
@@ -16,6 +32,45 @@ h1, h2, h3, h4, h5, h6 {
 
 img {
   border: 0;
+}
+
+nav {
+  margin-bottom: 40px;
+  margin-top: -20px;
+  position:relative;
+  right: 10px;
+  text-align: center;
+}
+
+nav ul {
+  list-style: none;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+nav strong {
+  color: #fff;
+  font-size: 22px;
+}
+
+nav a {
+  font-size: 22px;
+}
+
+p {
+  color: #fff;
+  font-size: 22px;
+}
+
+.lead {
+  margin-bottom: 40px;
+}
+
+.separator {
+  color: #fff;
 }
 
 .example {
