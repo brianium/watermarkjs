@@ -29,7 +29,7 @@ var mapToDataUrl = require("./lib/canvas").dataUrl;
 
 var mapToBlob = require("./lib/blob").blob;
 
-var position = _interopRequireWildcard(require("./lib/position"));
+var style = _interopRequireWildcard(require("./lib/style"));
 
 function watermark(resources, init, promise) {
 
@@ -88,16 +88,17 @@ function watermark(resources, init, promise) {
 ;
 
 /**
- * Utility functions
+ * Style functions
  */
-watermark.position = position;
+watermark.image = style.image;
+watermark.text = style.text;
 
 /**
  * Export to browser
  */
 window.watermark = watermark;
 
-},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/position":6,"babelify/polyfill":11}],2:[function(require,module,exports){
+},{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/style":7,"babelify/polyfill":13}],2:[function(require,module,exports){
 
 
 /**
@@ -417,9 +418,55 @@ function lowerRight(alpha) {
   };
 }
 
-;
-
 },{}],7:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var img = _interopRequireWildcard(require("./image"));
+
+var txt = _interopRequireWildcard(require("./text"));
+
+var image = img;
+exports.image = image;
+var text = txt;
+exports.text = text;
+
+},{"./image":6,"./text":8}],8:[function(require,module,exports){
+/**
+ * Write text to the lower right portion of the target canvas.
+ *
+ * @param {String} text - the text to write
+ * @param {String} font - same as the CSS font property
+ * @param {String} fillStyle
+ * @param {Number} alpha - control text transparency
+ * @return {Function}
+ */
+"use strict";
+
+exports.lowerRight = lowerRight;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function lowerRight(text, font, fillStyle, alpha) {
+  alpha || (alpha = 1);
+  return function (target) {
+    var context = target.getContext("2d");
+    context.globalAlpha = alpha;
+    context.fillStyle = fillStyle;
+    context.font = font;
+    var metrics = context.measureText(text);
+    context.fillText(text, target.width - (metrics.width + 10), target.height - 10);
+    return target;
+  };
+}
+
+},{}],9:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -432,7 +479,7 @@ require("core-js/shim");
 
 require("regenerator-babel/runtime");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"core-js/shim":8,"regenerator-babel/runtime":9}],8:[function(require,module,exports){
+},{"core-js/shim":10,"regenerator-babel/runtime":11}],10:[function(require,module,exports){
 /**
  * Core.js 0.6.1
  * https://github.com/zloirock/core-js
@@ -2411,7 +2458,7 @@ $define(GLOBAL + BIND, {
   Iterators.NodeList = Iterators[ARRAY];
 }(global.NodeList);
 }(typeof self != 'undefined' && self.Math === Math ? self : Function('return this')(), true);
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -2952,10 +2999,10 @@ $define(GLOBAL + BIND, {
 );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = require("./lib/babel/polyfill");
 
-},{"./lib/babel/polyfill":7}],11:[function(require,module,exports){
+},{"./lib/babel/polyfill":9}],13:[function(require,module,exports){
 module.exports = require("babel-core/polyfill");
 
-},{"babel-core/polyfill":10}]},{},[1]);
+},{"babel-core/polyfill":12}]},{},[1]);

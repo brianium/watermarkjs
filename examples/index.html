@@ -25,7 +25,7 @@
         <pre>
           <code class="javascript">
 watermark(['/img/shepherd.jpg', '/img/logo.png'])
-  .image(watermark.position.lowerRight())
+  .image(watermark.image.lowerRight())
   .then(function (img) {
     document.getElementById('composite-image').appendChild(img);
   });
@@ -38,7 +38,7 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
         <pre>
           <code class="javascript">
 watermark(['/img/forest.jpg', '/img/logo.png'])
-  .image(watermark.position.lowerRight(0.5))
+  .image(watermark.image.lowerRight(0.5))
   .then(function (img) {
     document.getElementById('alpha-image').appendChild(img);
   });
@@ -51,9 +51,9 @@ watermark(['/img/forest.jpg', '/img/logo.png'])
         <pre>
           <code class="javascript">
 watermark(['/img/field.jpg'])
-  .image(watermark.position.lowerRight(0.5))
+  .image(watermark.text.lowerRight('MyPhoto', '28px serif', '#fff', 0.5))
   .then(function (img) {
-    document.getElementById('alpha-image').appendChild(img);
+    document.getElementById('text').appendChild(img);
   });
           </code>
         </pre>
@@ -65,7 +65,7 @@ watermark(['/img/field.jpg'])
   <script>
     // simple composite image
     watermark(['/img/shepherd.jpg', '/img/logo.png'])
-      .image(watermark.position.lowerRight())
+      .image(watermark.image.lowerRight())
       .then(function (img) {
         var pre = document.querySelector('#composite-image pre');
         pre.parentNode.insertBefore(img, pre);
@@ -73,7 +73,7 @@ watermark(['/img/field.jpg'])
 
     // a composite image with transparent watermark
     watermark(['/img/forest.jpg', '/img/logo.png'])
-      .image(watermark.position.lowerRight(0.5))
+      .image(watermark.image.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#alpha-image pre');
         pre.parentNode.insertBefore(img, pre);
@@ -81,15 +81,7 @@ watermark(['/img/field.jpg'])
 
     // simple text watermark
     watermark(['/img/field.jpg'])
-      .image(function(target) {
-        var context = target.getContext('2d');
-        context.globalAlpha = 0.5;
-        context.fillStyle = '#fff';
-        context.font = "28px Helevetica, Arial, sans-serif";
-        var text = context.measureText('Scaturro Photography');
-        context.fillText('Scaturro Photography', target.width - (text.width + 10), target.height - 14);
-        return target;
-      })
+      .image(watermark.text.lowerRight('MyPhoto', '28px serif', '#fff', 0.5))
       .then(function (img) {
         var pre = document.querySelector('#text pre');
         pre.parentNode.insertBefore(img, pre);
