@@ -37,7 +37,7 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
         <h2>Alpha Transparency</h2>
         <pre>
           <code class="javascript">
-watermark(['/img/shepherd.jpg', '/img/logo.png'])
+watermark(['/img/foreset.jpg', '/img/logo.png'])
   .image(watermark.position.lowerRight(0.5))
   .then(function (img) {
     document.getElementById('alpha-image').appendChild(img);
@@ -50,6 +50,7 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
   </div>
 
   <script>
+    // simple composite image
     watermark(['/img/shepherd.jpg', '/img/logo.png'])
       .image(watermark.position.lowerRight())
       .then(function (img) {
@@ -57,7 +58,8 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
         pre.parentNode.insertBefore(img, pre);
       });
 
-    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+    // a composite image with transparent watermark
+    watermark(['/img/forest.jpg', '/img/logo.png'])
       .image(watermark.position.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#alpha-image pre');
