@@ -393,6 +393,17 @@ function mapToCanvas(images) {
 }
 
 },{}],6:[function(require,module,exports){
+/**
+ * Return a function for positioning a watermark on a target canvas.
+ *
+ * @param {Function} xFn - a function to determine an x value.
+ * @param {Function} yFn - a function to determine a y value.
+ * @param {Number} alpha
+ * @return {Function}
+ */
+"use strict";
+
+exports.atPos = atPos;
 
 /**
  * Place the watermark in the lower right corner of the target
@@ -401,21 +412,27 @@ function mapToCanvas(images) {
  * @param {Number} alpha
  * @return {Function}
  */
-"use strict";
-
 exports.lowerRight = lowerRight;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function lowerRight(alpha) {
+function atPos(xFn, yFn, alpha) {
   alpha || (alpha = 1);
   return function (target, watermark) {
     var context = target.getContext("2d");
     context.globalAlpha = alpha;
-    context.drawImage(watermark, target.width - (watermark.width + 10), target.height - (watermark.height + 10));
+    context.drawImage(watermark, xFn(target, watermark), yFn(target, watermark));
     return target;
   };
+}
+
+function lowerRight(alpha) {
+  return atPos(function (target, mark) {
+    return target.width - (mark.width + 10);
+  }, function (target, mark) {
+    return target.height - (mark.height + 10);
+  }, alpha);
 }
 
 },{}],7:[function(require,module,exports){
