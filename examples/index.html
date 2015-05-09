@@ -37,7 +37,20 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
         <h2>Alpha Transparency</h2>
         <pre>
           <code class="javascript">
-watermark(['/img/foreset.jpg', '/img/logo.png'])
+watermark(['/img/forest.jpg', '/img/logo.png'])
+  .image(watermark.position.lowerRight(0.5))
+  .then(function (img) {
+    document.getElementById('alpha-image').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="text">
+        <h2>Text</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/field.jpg'])
   .image(watermark.position.lowerRight(0.5))
   .then(function (img) {
     document.getElementById('alpha-image').appendChild(img);
@@ -63,6 +76,22 @@ watermark(['/img/foreset.jpg', '/img/logo.png'])
       .image(watermark.position.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#alpha-image pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // simple text watermark
+    watermark(['/img/field.jpg'])
+      .image(function(target) {
+        var context = target.getContext('2d');
+        context.globalAlpha = 0.5;
+        context.fillStyle = '#fff';
+        context.font = "28px Helevetica, Arial, sans-serif";
+        var text = context.measureText('Scaturro Photography');
+        context.fillText('Scaturro Photography', target.width - (text.width + 10), target.height - 14);
+        return target;
+      })
+      .then(function (img) {
+        var pre = document.querySelector('#text pre');
         pre.parentNode.insertBefore(img, pre);
       });
   </script>
