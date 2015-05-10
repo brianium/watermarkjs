@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>watermark.js - using images</title>
+  <script src="/scripts/watermark.min.js"></script>
+  <script src="/scripts/examples.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
+    <nav>
+      <ul>
+        <li><a href="images.html">images</a></li>
+        <li class="separator">-</li>
+        <li><a href="text.html">text</a></li>
+        <li class="separator">-</li>
+        <li><a href="#">uploading</a></li>
+      </ul>
+    </nav>
+
+    <div class="col-xs-12">
+      <p class="lead">
+        Sometimes you just want to write some text on top of an image. The following examples demonstrate
+        using some of text functions included with watermark.js. In the interest of saving space, the following
+        examples assume <code>watermark.text</code> has been aliased to <code>text</code>. A one second timeout is used
+        on page load to ensure font faces are loaded.
+      </p>
+
+      <div class="example" id="lower-right">
+        <h2>Lower Right</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/shepherd.jpg'])
+  .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .then(function (img) {
+    document.getElementById('lower-right').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="lower-left">
+        <h2>Lower Left</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/forest.jpg'])
+  .image(text.lowerLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .then(function (img) {
+    document.getElementById('lower-left').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="upper-right">
+        <h2>Upper Right</h2>
+        <pre>
+          <code class="javascript">
+// TextMetrics objects do not support font height very well
+// so we manually provide a y value of 48 here
+var ur = text.upperRight;
+watermark(['/img/field.jpg'])
+  .image(ur('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+  .then(function (img) {
+    document.getElementById('upper-right').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="upper-left">
+        <h2>Upper Left</h2>
+        <pre>
+          <code class="javascript">
+// TextMetrics objects do not support font height very well
+// so we manually provide a y value of 48 here
+var ul = text.upperLeft;
+watermark(['/img/wolf.jpg'])
+  .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+  .then(function (img) {
+    document.getElementById('upper-left').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="center">
+        <h2>Center</h2>
+        <pre>
+          <code class="javascript">
+watermark(['/img/coffee.jpg'])
+  .image(text.center('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .then(function (img) {
+    document.getElementById('center').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="arbitrary">
+        <h2>Arbitrary Positions</h2>
+        <pre>
+          <code class="javascript">
+var x = function(boat, metrics, context) {
+  return 73;
+};
+
+var y = function(boat, metrics, context) {
+  return 63;
+};
+
+pos = text.atPos;
+
+watermark(['/img/boat.jpg'])
+  .image(pos(x, y, 'watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .then(function (img) {
+    document.getElementById('arbitrary').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div class="example" id="rotate">
+        <h2>Rotate</h2>
+        <pre>
+          <code class="javascript">
+// At the end of the day, a draw function is just a function
+// that receives a canvas, manipulates it, then returns it.
+// You can always roll your own functionality.
+var rotate = function(target) {
+  var context = target.getContext('2d');
+  var text = 'watermark.js';
+  var metrics = context.measureText(text);
+  var x = (target.width / 2) - (metrics.width + 24);
+  var y = (target.height / 2) + 48 * 2;
+
+  context.translate(x, y);
+  context.globalAlpha = 0.5;
+  context.fillStyle = '#fff';
+  context.font = '48px Josefin Slab';
+  context.rotate(-45 * Math.PI / 180);
+  context.fillText(text, 0, 0);
+  return target;
+};
+
+watermark(['/img/bear.jpg'])
+  .image(rotate)
+  .then(function (img) {
+    document.getElementById('rotate').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    setTimeout(function () { //ensure font faces are loaded
+      // lower right positioning
+      var text = watermark.text;
+
+      watermark(['/img/shepherd.jpg'])
+        .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+        .then(function (img) {
+          var pre = document.querySelector('#lower-right pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      watermark(['/img/forest.jpg'])
+        .image(text.lowerLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+        .then(function (img) {
+          var pre = document.querySelector('#lower-left pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      watermark(['/img/field.jpg'])
+        .image(text.upperRight('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+        .then(function (img) {
+          var pre = document.querySelector('#upper-right pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      watermark(['/img/wolf.jpg'])
+        .image(text.upperLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+        .then(function (img) {
+          var pre = document.querySelector('#upper-left pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      watermark(['/img/coffee.jpg'])
+        .image(text.center('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+        .then(function (img) {
+          var pre = document.querySelector('#center pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      var x = function(boat, metrics, context) {
+        return 73;
+      };
+
+      var y = function(boat, metrics, context) {
+        return 63;
+      };
+
+      pos = text.atPos;
+      watermark(['/img/boat.jpg'])
+        .image(pos(x, y, 'watermark.js', '48px Josefin Slab', '#fff', 0.5))
+        .then(function (img) {
+          var pre = document.querySelector('#arbitrary pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      var rotate = function(target) {
+        var context = target.getContext('2d');
+        var text = 'watermark.js';
+        var metrics = context.measureText(text);
+        var x = (target.width / 2) - (metrics.width + 24);
+        var y = (target.height / 2) + 48 * 2;
+
+        context.translate(x, y);
+        context.globalAlpha = 0.5;
+        context.fillStyle = '#fff';
+        context.font = '48px Josefin Slab';
+        context.rotate(-45 * Math.PI / 180);
+        context.fillText(text, 0, 0);
+        return target;
+      };
+
+      watermark(['/img/bear.jpg'])
+        .image(rotate)
+        .then(function (img) {
+          var pre = document.querySelector('#rotate pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+    }, 1000);
+  </script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
