@@ -162,6 +162,24 @@ watermark(['/img/bear.jpg'])
         </pre>
       </div>
 
+      <div class="example" id="multiple">
+        <h2>Multiple Text Watermarks</h2>
+        <pre>
+          <code class="javascript">
+// by chaining off of render() we can write on top
+// of our image that has already been watermarked
+var ul = text.upperLeft;
+watermark(['/img/shepherd.jpg'])
+  .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .render()
+  .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+  .then(function (img) {
+    document.getElementById('center').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
+
     </div>
 
   </div>
@@ -242,6 +260,15 @@ watermark(['/img/bear.jpg'])
         .image(rotate)
         .then(function (img) {
           var pre = document.querySelector('#rotate pre');
+          pre.parentNode.insertBefore(img, pre);
+        });
+
+      watermark(['/img/shepherd.jpg'])
+        .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+        .render()
+        .image(text.upperLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+        .then(function (img) {
+          var pre = document.querySelector('#multiple pre');
           pre.parentNode.insertBefore(img, pre);
         });
 

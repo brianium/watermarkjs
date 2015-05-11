@@ -6,7 +6,7 @@ var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? ob
 /**
  * Return a watermark object.
  *
- * @param {Array} resources - a collection of urls and File objects
+ * @param {Array} resources - a collection of urls, File objects, or Image objects
  * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
  * @param {Promise} promise - optional
  * @return {Object}
@@ -51,8 +51,12 @@ function watermark(resources, init, promise) {
     },
 
     /**
-     * Add additional resources. This function accepts anything accepted by
+     * Load additional resources. This function accepts anything accepted by
      * the watermark factory.
+     *
+     * @param {Array} resources - a collection of urls, File objects, or Image objects
+     * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
+     * @return {Object}
      */
     load: (function (_load) {
       var _loadWrapper = function load(_x, _x2) {
@@ -71,6 +75,20 @@ function watermark(resources, init, promise) {
 
       return watermark(resources, init, promise);
     }),
+
+    /**
+     * Render the current state of the watermarked image. Useful for performing
+     * actions after the watermark has been applied.
+     *
+     * @return {Object}
+     */
+    render: function render() {
+      var promise = this.then(function (resource) {
+        return load([resource]);
+      });
+
+      return watermark(resources, init, promise);
+    },
 
     /**
      * Convert the watermark into a blob.

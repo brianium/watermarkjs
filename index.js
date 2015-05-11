@@ -8,7 +8,7 @@ import * as style from './lib/style';
 /**
  * Return a watermark object.
  *
- * @param {Array} resources - a collection of urls and File objects
+ * @param {Array} resources - a collection of urls, File objects, or Image objects
  * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
  * @param {Promise} promise - optional
  * @return {Object}
@@ -36,12 +36,29 @@ export function watermark(resources, init, promise) {
     },
 
     /**
-     * Add additional resources. This function accepts anything accepted by
+     * Load additional resources. This function accepts anything accepted by
      * the watermark factory.
+     *
+     * @param {Array} resources - a collection of urls, File objects, or Image objects
+     * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
+     * @return {Object}
      */
     load(resources, init) {
       let promise = this
         .then(resource => load([resource].concat(resources), init));
+
+      return watermark(resources, init, promise);
+    },
+
+    /**
+     * Render the current state of the watermarked image. Useful for performing
+     * actions after the watermark has been applied.
+     *
+     * @return {Object}
+     */
+    render() {
+      let promise = this
+        .then(resource => load([resource]));
 
       return watermark(resources, init, promise);
     },
