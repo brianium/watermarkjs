@@ -24,6 +24,7 @@ gulp.task('browserify', function() {
       .pipe(buffer())
       .pipe(rename(stripDirectory))
       .pipe(gulp.dest(config.dist))
+      .pipe(gulp.dest(config.examples + '/scripts'))
       .pipe(rename({suffix: '.min'}))
       .pipe(uglify())
       .pipe(gulp.dest(config.dist))

@@ -15,6 +15,8 @@ import * as style from './lib/style';
  */
 export function watermark(resources, init, promise) {
 
+  promise || (promise = load(resources, init));
+
   return {
 
     /**
@@ -25,12 +27,23 @@ export function watermark(resources, init, promise) {
      * @return {Object}
      */
     dataUrl(draw) {
-      let promise = load(resources, init)
+      let promise = this
         .then(mapToCanvas)
         .then(invoker(draw))
         .then(mapToDataUrl);
 
-      return new watermark(resources, init, promise);
+      return watermark(resources, init, promise);
+    },
+
+    /**
+     * Add additional resources. This function accepts anything accepted by
+     * the watermark factory.
+     */
+    add(resources, init) {
+      let promise = this
+        .then(resource => load([resource].concat(resources), init));
+
+      return watermark(resources, init, promise);
     },
 
     /**
