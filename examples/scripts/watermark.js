@@ -54,13 +54,23 @@ function watermark(resources, init, promise) {
      * Add additional resources. This function accepts anything accepted by
      * the watermark factory.
      */
-    add: function add(resources, init) {
+    load: (function (_load) {
+      var _loadWrapper = function load(_x, _x2) {
+        return _load.apply(this, arguments);
+      };
+
+      _loadWrapper.toString = function () {
+        return _load.toString();
+      };
+
+      return _loadWrapper;
+    })(function (resources, init) {
       var promise = this.then(function (resource) {
         return load([resource].concat(resources), init);
       });
 
       return watermark(resources, init, promise);
-    },
+    }),
 
     /**
      * Convert the watermark into a blob.

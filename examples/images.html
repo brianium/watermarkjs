@@ -121,6 +121,21 @@ watermark(['/img/boat.jpg', '/img/logo.png'])
         </pre>
       </div>
 
+      <div class="example" id="multiple">
+        <h2>Multiple Watermarks</h2>
+        <pre>
+          <code class="javascript">
+// using load to draw additional images
+watermark(['/img/boat.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerRight(0.5))
+  .load(['/img/peridot.png'])
+  .image(watermark.image.upperLeft(0.5))
+  .then(function (img) {
+    document.getElementById('multiple').appendChild(img);
+  });
+          </code>
+        </pre>
+      </div>
 
     </div>
 
@@ -180,6 +195,16 @@ watermark(['/img/boat.jpg', '/img/logo.png'])
       .image(watermark.image.atPos(getX, getY, 0.5))
       .then(function (img) {
         var pre = document.querySelector('#arbitrary pre');
+        pre.parentNode.insertBefore(img, pre);
+      });
+
+    // multiple images
+    watermark(['/img/boat.jpg', '/img/logo.png'])
+      .image(watermark.image.lowerRight(0.5))
+      .load(['/img/peridot.png'])
+      .image(watermark.image.upperLeft(0.5))
+      .then(function (img) {
+        var pre = document.querySelector('#multiple pre');
         pre.parentNode.insertBefore(img, pre);
       });
   </script>

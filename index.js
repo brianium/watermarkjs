@@ -39,7 +39,7 @@ export function watermark(resources, init, promise) {
      * Add additional resources. This function accepts anything accepted by
      * the watermark factory.
      */
-    add(resources, init) {
+    load(resources, init) {
       let promise = this
         .then(resource => load([resource].concat(resources), init));
 
