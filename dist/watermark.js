@@ -203,6 +203,14 @@ exports.invoker = invoker;
  * @return {Function}
  */
 exports.sequence = sequence;
+
+/**
+ * Return the argument passed to it.
+ *
+ * @param {Mixed} x
+ * @return {Mixed}
+ */
+exports.identity = identity;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -246,6 +254,10 @@ function sequence() {
 
     return value;
   };
+}
+
+function identity(x) {
+  return x;
 }
 
 },{}],5:[function(require,module,exports){
