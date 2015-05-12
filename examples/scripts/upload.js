@@ -116,8 +116,9 @@
    * @param {FormData}
    * @param {Function} progress handler
    * @param {Function} completion handler
+   * @param {Function} error handler
    */
-  function upload(onProgress, onComplete) {
+  function upload(onProgress, onComplete, onError) {
     var req = new XMLHttpRequest(),
         key = "watermark-" + Date.now().toString() + '.png',
         img = document.querySelector('#preview img'),
@@ -134,9 +135,14 @@
         req.upload.onprogress = onProgress;
         req.onreadystatechange = function() {
           if (req.readyState === 4) {
-            onComplete();
+            if (! /Error/.test(req.responseText)) { //simple test for AWS error response
+              onComplete();
+            } else {
+              onError(req.responseText);
+            }
           }
         }
+        req.addEventListener('error', onError, false);
         req.send(fd);
       });
   }
@@ -181,7 +187,8 @@
     form.addEventListener('submit', function (e) {
       var progress = document.getElementById('progress'),
           bar = progress.querySelector('.progress-bar'),
-          complete = document.getElementById('complete');
+          complete = document.getElementById('complete'),
+          err = document.getElementById('error');
 
       progress.style.visibility = 'visible';
 
@@ -191,7 +198,11 @@
           bar.style.width = percent + "%";
         }
       }, function () {
-        complete.style.visibility = 'visible';
+        complete.style.display = 'block';
+        err.style.display = 'none';
+      }, function () {
+        err.style.display = 'block';
+        complete.style.display = 'none';
       });
 
       e.preventDefault();
