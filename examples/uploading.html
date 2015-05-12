@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <title>watermark.js - watermarks in the browser</title>
   <script src="/scripts/watermark.js"></script>
-  <script src="/scripts/examples.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <script src="/scripts/upload.js"></script>
   <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
@@ -49,7 +48,7 @@
 
     <div class="row">
       <div class="col-md-4">
-        <form action="" style="margin-top: 45px;">
+        <form action="" id="uploadForm" method="POST" style="margin-top: 45px;">
           <div class="input-group">
             <span class="input-group-btn">
               <span class="btn btn-primary btn-file">
@@ -107,8 +106,19 @@
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Signature" id="signature" disabled />
           </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Bucket" id="bucket" disabled />
+          </div>
 
           <button id="upload" type="submit" class="btn btn-default" disabled>Upload</button>
+
+          <div class="progress" id="progress" style="margin-top: 20px; visibility: hidden;">
+            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0%">
+            </div>
+          </div>
+          <p id="complete" style="visibility: hidden;">
+            upload complete!
+          </p>
 
         </form>
       </div>
@@ -116,90 +126,6 @@
         <h2 class="text" style="margin-top:0">Preview</h2>
       </div>
     </div>
-
-  <script>
-  // quick and dirty vanilla javascript to watermark an image and upload it
-  // to amazon s3.
-
-  var original,
-      awsFields = ['accessKeyId', 'policy', 'signature'];
-
-  function enableFields(ids) {
-    ids.forEach(function(id) {
-      document.getElementById(id).removeAttribute('disabled');
-    })
-  }
-
-  function setText(input) {
-    var group = input.parentNode.parentNode.parentNode;
-    group.querySelector('.form-control').value = input.files[0].name;
-  }
-
-  function setTarget(file) {
-    enableFields(['watermark-button']);
-    Array.prototype.forEach.call(document.querySelectorAll('input[type=radio]'), function (radio) {
-      radio.removeAttribute('disabled');
-    });
-    watermark([file])
-      .image(function(target) { return target;  })
-      .then(function (img) {
-        document.getElementById('preview').appendChild(img);
-      });
-  }
-
-  function setWatermark(file) {
-    var preview = document.getElementById('preview'),
-        img = preview.querySelector('img'),
-        position = document.querySelector('input[type=radio]:checked').value;
-
-    if (! original) {
-      original = img;
-    }
-
-    watermark([original, file])
-      .image(watermark.image[position](0.5))
-      .then(function(marked) {
-        preview.replaceChild(marked, img);
-        enableFields(awsFields);
-      });
-  }
-
-  function waterMarkSet() {
-    var watermark = document.getElementById('watermark-name');
-    return !!watermark.value;
-  }
-
-  //preview functionality
-  document.addEventListener('change', function (e) {
-    var input = e.target;
-
-    if (input.type === 'file') {
-      setText(input);
-      input.id === 'target' ? setTarget(input.files[0]) : setWatermark(input.files[0]);
-    }
-
-    if (input.type === 'radio' && waterMarkSet()) {
-      setWatermark(document.getElementById('watermark').files[0]);
-    }
-  });
-
-  //uploading
-  function awsComplete(ids) {
-    return ids.every(function(id) {
-      var val = document.getElementById(id);
-      return !!val.value;
-    });
-  }
-
-  awsFields.forEach(function (id) {
-    document.getElementById(id).addEventListener('keyup', function () {
-      if (awsComplete(awsFields)) {
-        enableFields(['upload']);
-      }
-    });
-  });
-  </script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </body>
 
 </html>
