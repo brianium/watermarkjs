@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>watermark.js - using images</title>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
+    <nav>
+      <ul>
+        <li><a href="images.html">images</a></li>
+        <li class="separator">-</li>
+        <li><a href="text.html">text</a></li>
+        <li class="separator">-</li>
+        <li><a href="uploading.html">uploading</a></li>
+        <li class="separator">-</li>
+        <li><a href="docs.html">documentation</a></li>
+      </ul>
+    </nav>
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <h2 id="watermark">watermark(resources, [, init, [, promise]])</h2>
+        <p>
+          The watermark factory. Loads resources and returns an object with functions
+          for manipulating them. <code>resources</code> can be a mixed array of any of the
+          following: url, <code>File</code>, <code>Blob</code>, or <code>Image</code>. The <code>init</code>
+          function is used when loading images from a url, and is invoked with the image before fetching.
+        </p>
+        <pre>
+          <code class="javascript">
+// load local images
+watermark(['/img/coffee.jpg', '/img/logo.png']);
+
+// load cross domain images
+watermark(['http://web.com/a.jpg', 'http://web.com/b.jpg'], function (img) {
+  img.crossOrigin = 'anonymous';
+});
+
+// load a url and a file object
+var upload = document.querySelector('input[type=file]').files[0];
+watermark(['/img/photo.jpg', upload]);
+          </code>
+        </pre>
+
+        <h2 id="image">image(draw)</h2>
+        <p>
+          Converts all resources into an <code>Image</code> object by applying the function <code>draw</code>. The draw
+          function receives all resources as canvases. Draw functions are expected to return the resource being watermarked.
+        </p>
+        <pre>
+          <code class="javascript">
+// place a watermark in the upper left hand corner of an image
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(function (coffee, logo) {
+    var context = coffee.getContext('2d');
+    context.save();
+
+    context.globalAlpha = alpha;
+    context.drawImage(logo, 10, 10);
+
+    context.restore();
+    return target;
+  });
+          </code>
+        </pre>
+
+        <h2 id="blob">blob(draw)</h2>
+        <p>
+          Converts all resources into a <code>Blob</code> object by applying the function <code>draw</code>. The draw
+          function receives all resources as canvases. Draw functions are expected to return the resource being watermarked. <code>Blob</code>
+          objects are useful for uploading generated watermarks.
+        </p>
+        <pre>
+          <code class="javascript">
+// place a watermark in the upper left hand corner of an image
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .blob(function (coffee, logo) {
+    var context = coffee.getContext('2d');
+    context.save();
+
+    context.globalAlpha = alpha;
+    context.drawImage(logo, 10, 10);
+
+    context.restore();
+    return target;
+  });
+          </code>
+        </pre>
+
+        <h2 id="dataUrl">dataUrl(draw)</h2>
+        <p>
+          Converts all resources into a data url by applying the function <code>draw</code>. The draw
+          function receives all resources as canvases. This function is used to create the base case for the <code>image()</code> and <code>blob()</code>
+          functions.
+        </p>
+        <pre>
+          <code class="javascript">
+// place a watermark in the upper left hand corner of an image
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .dataUrl(function (coffee, logo) {
+    var context = coffee.getContext('2d');
+    context.save();
+
+    context.globalAlpha = alpha;
+    context.drawImage(logo, 10, 10);
+
+    context.restore();
+    return target;
+  });
+          </code>
+        </pre>
+
+        <h2 id="then">then(fn)</h2>
+        <p>
+          Delegates to the <code>Promise</code> that was passed to the <code>watermark()</code> factory. This function is used
+          to do something with the result of watermarking.
+        </p>
+        <pre>
+          <code class="javascript">
+// append a generated image
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerRight(0.5))
+  .then(function (img) {
+    document.getElementById('preview').appendChild(img);
+  });
+
+// upload a watermarked image
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .blob(watermark.text.lowerRight('watermark.js', '48px serif', '#fff', 0.5))
+  .then(function (blob) {
+    // perform upload using FormData
+  });
+
+// use a data url as an image source
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .dataUrl(watermark.image.lowerLeft(0.5))
+  .then(function (url) {
+    document.querySelector('img').src = url;
+  });
+          </code>
+        </pre>
+
+        <h2 id="load">load(resources, [init])</h2>
+        <p>
+          Load additional resources. <code>resources</code> and <code>init</code> behave just as they do
+          in the <code>watermark()</code> factory. This function is useful for loading images on top
+          of already generated watermarks.
+        </p>
+        <pre>
+          <code class="javascript">
+// one watermark in the lower right and one in the upper left
+watermark(['/img/boat.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerRight(0.5))
+  .load(['/img/other-logo.png'])
+  .image(watermark.image.upperLeft(0.5))
+  .then(function (img) {
+    document.getElementById('#preview').appendChild(img);
+  });
+          </code>
+        </pre>
+
+        <h2 id="render">render()</h2>
+        <p>
+          Apply all transformations to the watermarked image and load it as a resource. Useful for general
+          post-processing or writing additional text on a watermarked image.
+        </p>
+        <pre>
+          <code class="javascript">
+// write multiple text watermarks
+var text = watermark.text
+watermark(['/img/shepherd.jpg'])
+  .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
+  .render()
+  .image(text.upperLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
+  .then(function (img) {
+    document.getElementById('#preview').appendChild(img);
+  });
+          </code>
+        </pre>
+
+        <h2 id="styles">Styles</h2>
+
+        <p>
+          As noted about draw functions, they accept canvas objects and perform various operations on them
+          to compose a single image. watermark.js comes with two namespaces featuring common draw operations for
+          watermarks.
+        </p>
+
+        <h2 id="image-styles">watermark.image</h2>
+
+        <p>
+          This namespace contains functions for positioning watermark images and controlling opacity.
+        </p>
+
+
+        <h2 id="text-styles">watermark.text</h2>
+
+      </div>
+      <div class="col-md-3">
+        <nav class="affix sidebar hidden-sm hidden-xs">
+          <ul class="nav">
+            <li><a href="#watermark">watermark()</a></li>
+            <li><a href="#image">image()</a></li>
+            <li><a href="#blob">blob()</a></li>
+            <li><a href="#dataUrl">dataUrl()</a></li>
+            <li><a href="#then">then()</a></li>
+            <li><a href="#load">load()</a></li>
+            <li><a href="#render">render()</a></li>
+            <li>
+              <a href="#styles">styles</a>
+              <ul>
+                <li><a href="#image-styles">images</a></li>
+                <li><a href="#text-styles">text</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>

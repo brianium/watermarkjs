@@ -38,7 +38,7 @@ nav {
   margin-bottom: 40px;
   margin-top: -20px;
   position:relative;
-  right: 18px;
+  right: 20px;
   text-align: center;
 }
 
@@ -65,6 +65,14 @@ p {
   font-size: 22px;
 }
 
+pre {
+  background: transparent;
+  border: 0;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+}
+
 .lead {
   margin-bottom: 40px;
 }
@@ -77,12 +85,8 @@ p {
   text-align: center;
 }
 
+
 .example pre {
-  background: transparent;
-  border: 0;
-  margin: 0 auto;
-  padding: 0;
-  text-align: left;
   width: 600px;
 }
 
@@ -129,4 +133,35 @@ p {
 
 .radio label {
   color: #fff;
+}
+
+.sidebar {
+  position: fixed;
+  top: 200px;
+  width: 225px;
+}
+
+.sidebar li {
+  display: block;
+  text-align: left;
+}
+
+.sidebar li ul {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li ul li {
+  border-left: 1px solid #fff;
+  margin: 5px 0;
+  padding-left: 15px;
+}
+
+.sidebar li ul li a {
+  font-size: 14px;
+}
+
+.sidebar .nav {
+  margin:0;
+  padding:0;
 }
