@@ -6,7 +6,7 @@ import {blob as mapToBlob} from './lib/blob';
 import * as style from './lib/style';
 
 /**
- * Return a watermark object.
+ * Return a watermark object
  *
  * @param {Array} resources - a collection of urls, File objects, or Image objects
  * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
@@ -21,7 +21,7 @@ export function watermark(resources, init, promise) {
 
     /**
      * Convert the watermarked image into a dataUrl. The draw
-     * function is given all images as canvas elements in order.
+     * function is given all images as canvas elements in order
      *
      * @param {Function} draw
      * @return {Object}
@@ -36,8 +36,7 @@ export function watermark(resources, init, promise) {
     },
 
     /**
-     * Load additional resources. This function accepts anything accepted by
-     * the watermark factory.
+     * Load additional resources
      *
      * @param {Array} resources - a collection of urls, File objects, or Image objects
      * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
@@ -52,7 +51,7 @@ export function watermark(resources, init, promise) {
 
     /**
      * Render the current state of the watermarked image. Useful for performing
-     * actions after the watermark has been applied.
+     * actions after the watermark has been applied
      *
      * @return {Object}
      */
@@ -64,7 +63,7 @@ export function watermark(resources, init, promise) {
     },
 
     /**
-     * Convert the watermark into a blob.
+     * Convert the watermark into a blob
      *
      * @param {Function} draw
      * @return {Object}
@@ -77,7 +76,10 @@ export function watermark(resources, init, promise) {
     },
 
     /**
-     * Convert the watermark into an image
+     * Convert the watermark into an image using the given draw function
+     *
+     * @param {Function} draw
+     * @return {Object}
      */
     image(draw) {
       let promise = this.dataUrl(draw)
@@ -87,7 +89,7 @@ export function watermark(resources, init, promise) {
     },
 
     /**
-     * Delegate to the watermark promise.
+     * Delegate to the watermark promise
      *
      * @return {Promise}
      */
