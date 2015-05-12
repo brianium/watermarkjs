@@ -1,4 +1,3 @@
-require('babelify/polyfill');
 import {load, mapToCanvas, createImage} from './lib/image';
 import {invoker} from './lib/functions';
 import {dataUrl as mapToDataUrl} from './lib/canvas';

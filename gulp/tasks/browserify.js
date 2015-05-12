@@ -16,17 +16,27 @@ function stripDirectory(path) {
   path.dirname = '';
 }
 
+function bundle(bun, name) {
+  return bun
+    .pipe(source(name))
+    .pipe(buffer())
+    .pipe(rename(stripDirectory))
+    .pipe(gulp.dest(config.dist))
+    .pipe(gulp.dest(config.examples + '/scripts'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest(config.dist))
+    .pipe(gulp.dest(config.examples + '/scripts'));
+}
+
 gulp.task('browserify', function() {
-  return browserify('./' + config.main)
+  bundle(browserify('./' + config.main)
       .transform(babelify)
-      .bundle()
-      .pipe(source('watermark.js'))
-      .pipe(buffer())
-      .pipe(rename(stripDirectory))
-      .pipe(gulp.dest(config.dist))
-      .pipe(gulp.dest(config.examples + '/scripts'))
-      .pipe(rename({suffix: '.min'}))
-      .pipe(uglify())
-      .pipe(gulp.dest(config.dist))
-      .pipe(gulp.dest(config.examples + '/scripts'))
+      .bundle(), 'watermark.js');
+
+  return bundle(
+    browserify('./index-polyfill.js')
+      .transform(babelify)
+      .bundle(), 'watermark-polyfill.js');
+
 });
