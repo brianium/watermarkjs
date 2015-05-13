@@ -98,6 +98,7 @@ pre {
 #preview img {
   border: 10px solid #fff;
   box-shadow: 3px 6px 5px rgba(0, 0, 0, 0.3);
+  max-width: 100%;
 }
 
 .btn-file {
