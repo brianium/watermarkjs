@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>watermark.js - using images</title>
+  <title>watermark.js - api documentation</title>
   <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
@@ -200,11 +200,167 @@ watermark(['/img/shepherd.jpg'])
         <h2 id="image-styles">watermark.image</h2>
 
         <p>
-          This namespace contains functions for positioning watermark images and controlling opacity.
+          This namespace contains functions for positioning watermark images and controlling opacity. Most of these functions
+          accept an alpha value and return a positioning function.
         </p>
+
+        <pre>
+          <code class="javascript">
+// draw the logo at the lower right corner at 50% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerRight(0.5));
+
+// draw the logo at the lower left corner at 50% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.lowerLeft(0.5));
+
+// draw the logo at the upper right corner at 50% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.upperRight(0.5));
+
+// draw the logo at the upper left corner at 50% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.upperLeft(0.5));
+
+// draw the logo at the center at 50% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.center(0.5));
+
+/**
+ * Callback for determining the x coordinate of the watermark
+ *
+ * @param {HTMLCanvasElement} coffee
+ * @param {HTMLCanvasElement} logo
+ * @return {Number}
+ */
+var getX = function(coffee, logo) {
+  return 73;
+};
+
+/**
+ * Callback for determining the y coordinate of the watermark
+ *
+ * @param {HTMLCanvasElement} coffee
+ * @param {HTMLCanvasElement} logo
+ * @return {Number}
+ */
+var getY = function(coffee, logo) {
+  return 63;
+};
+
+// draw the logo at an arbitrary location at 60% opacity
+watermark(['/img/coffee.jpg', '/img/logo.png'])
+  .image(watermark.image.atPos(getX, getY, 0.6));
+          </code>
+        </pre>
 
 
         <h2 id="text-styles">watermark.text</h2>
+
+        <p>
+          This namespace contains functions for positioning watermark text and controlling opacity. Most of these functions
+          accept font styles and an alpha value and return a positioning function.
+        </p>
+
+        <pre>
+          <code class="javascript">
+// draw 48px white text at the lower right corner at 50% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.lowerRight('watermark.js', '48px sans-serif', '#fff', 0.5));
+
+// draw 48px white text at the lower left corner at 50% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.lowerLeft('watermark.js', '48px sans-serif', '#fff', 0.5));
+
+/**
+ * Note: functions for drawing to the upper right and left corners
+ * support an additional y parameter due to browser limitations of
+ * the TextMetrics object used to calculate font height. When in doubt
+ * just use the size of your font for this parameter.
+ */
+
+// draw 48px white text at the upper right corner at 50% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.upperRight('watermark.js', '48px sans-serif', '#fff', 0.5, 48));
+
+// draw 48px white text at the upper left corner at 50% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.upperLeft('watermark.js', '48px sans-serif', '#fff', 0.5, 48));
+
+// draw 48px white text at the center at 50% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.center('watermark.js', '48px sans-serif', '#fff', 0.5));
+
+/**
+ * Callback for determining the x coordinate of the watermark
+ *
+ * @param {HTMLCanvasElement} coffee
+ * @param {TextMetrics} metrics
+ * @param {CanvasRenderingContex2D} context - context of the coffee canvas
+ * @return {Number}
+ */
+var x = function(coffee, metrics, context) {
+  return 73;
+};
+
+/**
+ * Callback for determining the y coordinate of the watermark
+ *
+ * @param {HTMLCanvasElement} coffee
+ * @param {TextMetrics} metrics
+ * @param {CanvasRenderingContex2D} context - context of the coffee canvas
+ * @return {Number}
+ */
+var y = function(coffee, metrics, context) {
+  return 63;
+};
+
+// draw 48px white text at an arbitrary location at 60% opacity
+watermark(['/img/coffee.jpg'])
+  .image(watermark.text.atPos(x, y, 'watermark.js', '48px sans-serif', '#fff', 0.6));
+          </code>
+        </pre>
+
+        <h2 id="custom-styles">Custom Styles</h2>
+
+        <p>
+          Creating your own custom styles is easy. Since watermark.js subscribes to the functional
+          style, a good pattern is to write functions that return functions.
+        </p>
+
+<pre>
+  <code class="javascript">
+watermark(['/img/coffee.jpg'])
+  image(myRadRotateFunction(0.5));
+  </code>
+</pre>
+
+        <p>
+          Keep in mind that these draw functions receive canvas objects, so in order to keep them
+          composable it is a good idea to leave the context the way you found it.
+        </p>
+
+<pre>
+  <code class="javascript">
+function myRadRotateFunction(alpha) {
+  return function(target) {
+    var context = target.getContext('2d');
+    context.save(); // capture the state of the context
+
+    // do some cool rotating things
+
+    context.restore(); // put the context back where you found it
+    return target;
+  }
+}
+  </code>
+</pre>
+
+      <p>
+        Note that we return the target canvas after we are done. This is required in order
+        for watermark.js to pass the finished product to <code>then</code> when you are ready
+        to do something with your watermarked image.
+      </p>
 
       </div>
       <div class="col-md-3">
@@ -222,6 +378,7 @@ watermark(['/img/shepherd.jpg'])
               <ul>
                 <li><a href="#image-styles">images</a></li>
                 <li><a href="#text-styles">text</a></li>
+                <li><a href="#custom-styles">custom</a></li>
               </ul>
             </li>
           </ul>
