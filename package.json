@@ -1,6 +1,6 @@
 {
   "name": "watermarkjs",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Watermarked images in the browser",
   "main": "dist/watermark.js",
   "scripts": {
@@ -16,7 +16,8 @@
   "keywords": [
     "canvas",
     "watermark",
-    "image"
+    "image",
+    "file"
   ],
   "author": "Brian Scaturro <scaturrob@gmail.com>",
   "license": "MIT",
