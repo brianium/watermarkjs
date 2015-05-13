@@ -1,7 +1,7 @@
 #watermark.js [![Build Status](https://travis-ci.org/brianium/watermarkjs.svg?branch=master)](https://travis-ci.org/brianium/watermarkjs)
 
 A functional library for watermarking images in the browser. Written with ES6, and made available
-to current browsers via [Babel](https://babeljs.io/).
+to current browsers via [Babel](https://babeljs.io/). Supports urls, file inputs, blobs, and on-page images.
 
 ##Tested Browsers
 
