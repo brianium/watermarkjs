@@ -12,6 +12,9 @@ tested and work:
 * Chrome 42 (OS X 10.10.3)
 * Firefox 38 (OS X 10.10.3)
 * Safari 8.0.6 (OS X 10.10.3)
+* Opera 29.0 (OS X 10.10.3)
+
+Please feel free to update this list or submit a fix for a particular browser via a pull request.
 
 ##watermark.js vs watermark-polyfill.js
 
