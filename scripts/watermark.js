@@ -1,7 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
 /**
  * Return a watermark object
@@ -12,27 +14,24 @@ var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? ob
  * @return {Object}
  */
 exports.watermark = watermark;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-var _libImage = require("./lib/image");
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var load = _libImage.load;
-var mapToCanvas = _libImage.mapToCanvas;
-var createImage = _libImage.createImage;
+var _libImage = require('./lib/image');
 
-var invoker = require("./lib/functions").invoker;
+var _libFunctions = require('./lib/functions');
 
-var mapToDataUrl = require("./lib/canvas").dataUrl;
+var _libCanvas = require('./lib/canvas');
 
-var mapToBlob = require("./lib/blob").blob;
+var _libBlob = require('./lib/blob');
 
-var style = _interopRequireWildcard(require("./lib/style"));
+var _libStyle = require('./lib/style');
+
+var style = _interopRequireWildcard(_libStyle);
 
 function watermark(resources, init, promise) {
 
-  promise || (promise = load(resources, init));
+  promise || (promise = (0, _libImage.load)(resources, init));
 
   return {
 
@@ -44,7 +43,7 @@ function watermark(resources, init, promise) {
      * @return {Object}
      */
     dataUrl: function dataUrl(draw) {
-      var promise = this.then(mapToCanvas).then(invoker(draw)).then(mapToDataUrl);
+      var promise = this.then(_libImage.mapToCanvas).then((0, _libFunctions.invoker)(draw)).then(_libCanvas.dataUrl);
 
       return watermark(resources, init, promise);
     },
@@ -56,23 +55,13 @@ function watermark(resources, init, promise) {
      * @param {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
      * @return {Object}
      */
-    load: (function (_load) {
-      var _loadWrapper = function load(_x, _x2) {
-        return _load.apply(this, arguments);
-      };
-
-      _loadWrapper.toString = function () {
-        return _load.toString();
-      };
-
-      return _loadWrapper;
-    })(function (resources, init) {
+    load: function load(resources, init) {
       var promise = this.then(function (resource) {
-        return load([resource].concat(resources), init);
+        return (0, _libImage.load)([resource].concat(resources), init);
       });
 
       return watermark(resources, init, promise);
-    }),
+    },
 
     /**
      * Render the current state of the watermarked image. Useful for performing
@@ -82,7 +71,7 @@ function watermark(resources, init, promise) {
      */
     render: function render() {
       var promise = this.then(function (resource) {
-        return load([resource]);
+        return (0, _libImage.load)([resource]);
       });
 
       return watermark(resources, init, promise);
@@ -95,7 +84,7 @@ function watermark(resources, init, promise) {
      * @return {Object}
      */
     blob: function blob(draw) {
-      var promise = this.dataUrl(draw).then(mapToBlob);
+      var promise = this.dataUrl(draw).then(_libBlob.blob);
 
       return watermark(resources, init, promise);
     },
@@ -107,7 +96,7 @@ function watermark(resources, init, promise) {
      * @return {Object}
      */
     image: function image(draw) {
-      var promise = this.dataUrl(draw).then(createImage);
+      var promise = this.dataUrl(draw).then(_libImage.createImage);
 
       return watermark(resources, init, promise);
     },
@@ -142,7 +131,11 @@ watermark.text = style.text;
 window.watermark = watermark;
 
 },{"./lib/blob":2,"./lib/canvas":3,"./lib/functions":4,"./lib/image":5,"./lib/style":7}],2:[function(require,module,exports){
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
 /**
  * Split a data url into a content type and raw data
@@ -150,8 +143,6 @@ window.watermark = watermark;
  * @param {String} dataUrl
  * @return {Array}
  */
-"use strict";
-
 exports.split = split;
 
 /**
@@ -169,11 +160,8 @@ exports.decode = decode;
  * @return {UInt8Array}
  */
 exports.uint8 = uint8;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-var sequence = require("../functions").sequence;
+var _functions = require('../functions');
 
 var url = /^data:([^;]+);base64,(.*)$/;
 function split(dataUrl) {
@@ -201,7 +189,7 @@ function uint8(data) {
  * @param {String} dataUrl
  * @return {Blob}
  */
-var blob = sequence(split, function (parts) {
+var blob = (0, _functions.sequence)(split, function (parts) {
   return [decode(parts[1]), parts[0]];
 }, function (blob) {
   return new Blob([uint8(blob[0])], { type: blob[1] });
@@ -209,24 +197,29 @@ var blob = sequence(split, function (parts) {
 exports.blob = blob;
 
 },{"../functions":4}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * Get the data url of a canvas
  *
  * @param {HTMLCanvasElement}
  * @return {String}
  */
-"use strict";
-
 exports.dataUrl = dataUrl;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 function dataUrl(canvas) {
   return canvas.toDataURL();
 }
 
 },{}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * Returns a function that invokes the given function
  * with an array of arguments
@@ -234,8 +227,6 @@ function dataUrl(canvas) {
  * @param {Function} fn
  * @return {Function}
  */
-"use strict";
-
 exports.invoker = invoker;
 
 /**
@@ -254,9 +245,6 @@ exports.sequence = sequence;
  * @return {Mixed}
  */
 exports.identity = identity;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 function invoker(fn) {
   return function (args) {
@@ -270,32 +258,9 @@ function sequence() {
   }
 
   return function (value) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = funcs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var fn = _step.value;
-
-        value = fn.call(null, value);
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator["return"]) {
-          _iterator["return"]();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
-    }
-
-    return value;
+    return funcs.reduce(function (val, fn) {
+      return fn.call(null, val);
+    }, value);
   };
 }
 
@@ -304,7 +269,11 @@ function identity(x) {
 }
 
 },{}],5:[function(require,module,exports){
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
 /**
  * Given a resource, return an appropriate loading function for it's type
@@ -312,8 +281,6 @@ function identity(x) {
  * @param {String|File|Image} resource
  * @return {Function}
  */
-"use strict";
-
 exports.getLoader = getLoader;
 
 /**
@@ -369,11 +336,8 @@ exports.imageToCanvas = imageToCanvas;
  * @return {Array}
  */
 exports.mapToCanvas = mapToCanvas;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-var identity = require("../functions").identity;
+var _functions = require('../functions');
 
 /**
  * Set the src of an image object and call the resolve function
@@ -392,12 +356,12 @@ function setAndResolve(img, src, resolve) {
 function getLoader(resource) {
   var type = typeof resource;
 
-  if (type === "string") {
+  if (type === 'string') {
     return loadUrl;
   }
 
   if (resource instanceof Image) {
-    return identity;
+    return _functions.identity;
   }
 
   return loadFile;
@@ -416,7 +380,7 @@ function load(resources, init) {
 
 function loadUrl(url, init) {
   var img = new Image();
-  typeof init === "function" && init(img);
+  typeof init === 'function' && init(img);
   return new Promise(function (resolve) {
     img.onload = function () {
       return resolve(img);
@@ -438,7 +402,7 @@ function loadFile(file) {
 
 function createImage(url, onload) {
   var img = new Image();
-  if (typeof onload === "function") {
+  if (typeof onload === 'function') {
     img.onload = onload;
   }
   img.src = url;
@@ -446,8 +410,8 @@ function createImage(url, onload) {
 }
 
 function imageToCanvas(img) {
-  var canvas = document.createElement("canvas");
-  var ctx = canvas.getContext("2d");
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
 
   canvas.width = img.width;
   canvas.height = img.height;
@@ -460,6 +424,11 @@ function mapToCanvas(images) {
 }
 
 },{"../functions":4}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 /**
  * Return a function for positioning a watermark on a target canvas
  *
@@ -468,8 +437,6 @@ function mapToCanvas(images) {
  * @param {Number} alpha
  * @return {Function}
  */
-"use strict";
-
 exports.atPos = atPos;
 
 /**
@@ -516,14 +483,11 @@ exports.upperLeft = upperLeft;
  * @return {Function}
  */
 exports.center = center;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 function atPos(xFn, yFn, alpha) {
   alpha || (alpha = 1);
   return function (target, watermark) {
-    var context = target.getContext("2d");
+    var context = target.getContext('2d');
     context.save();
 
     context.globalAlpha = alpha;
@@ -575,17 +539,21 @@ function center(alpha) {
 }
 
 },{}],7:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
-
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var img = _interopRequireWildcard(require("./image"));
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var txt = _interopRequireWildcard(require("./text"));
+var _image = require('./image');
+
+var img = _interopRequireWildcard(_image);
+
+var _text = require('./text');
+
+var txt = _interopRequireWildcard(_text);
 
 var image = img;
 exports.image = image;
@@ -593,6 +561,11 @@ var text = txt;
 exports.text = text;
 
 },{"./image":6,"./text":8}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 /**
  * Return a function for positioning a watermark on a target canvas
  *
@@ -604,8 +577,6 @@ exports.text = text;
  * @param {Number} alpha
  * @return {Function}
  */
-"use strict";
-
 exports.atPos = atPos;
 
 /**
@@ -667,14 +638,11 @@ exports.upperLeft = upperLeft;
  * @return {Function}
  */
 exports.center = center;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 function atPos(xFn, yFn, text, font, fillStyle, alpha) {
   alpha || (alpha = 1);
   return function (target) {
-    var context = target.getContext("2d");
+    var context = target.getContext('2d');
     context.save();
 
     context.globalAlpha = alpha;
@@ -722,9 +690,9 @@ function upperLeft(text, font, fillStyle, alpha, y) {
 
 function center(text, font, fillStyle, alpha, y) {
   return atPos(function (target, metrics, ctx) {
-    ctx.textAlign = "center";return target.width / 2;
+    ctx.textAlign = 'center';return target.width / 2;
   }, function (target, metrics, ctx) {
-    ctx.textBaseline = "middle";return target.height / 2;
+    ctx.textBaseline = 'middle';return target.height / 2;
   }, text, font, fillStyle, alpha);
 }
 
