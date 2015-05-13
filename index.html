@@ -35,7 +35,7 @@
         <h2>Composite Images</h2>
         <pre>
           <code class="javascript">
-watermark(['/img/shepherd.jpg', '/img/logo.png'])
+watermark(['img/shepherd.jpg', 'img/logo.png'])
   .image(watermark.image.lowerRight())
   .then(function (img) {
     document.getElementById('composite-image').appendChild(img);
@@ -48,7 +48,7 @@ watermark(['/img/shepherd.jpg', '/img/logo.png'])
         <h2>Alpha Transparency</h2>
         <pre>
           <code class="javascript">
-watermark(['/img/forest.jpg', '/img/logo.png'])
+watermark(['img/forest.jpg', 'img/logo.png'])
   .image(watermark.image.lowerRight(0.5))
   .then(function (img) {
     document.getElementById('alpha-image').appendChild(img);
@@ -61,7 +61,7 @@ watermark(['/img/forest.jpg', '/img/logo.png'])
         <h2>Text</h2>
         <pre>
           <code class="javascript">
-watermark(['/img/field.jpg'])
+watermark(['img/field.jpg'])
   .image(watermark.text.lowerRight('MyPhoto', '28px serif', '#fff', 0.5))
   .then(function (img) {
     document.getElementById('text').appendChild(img);
@@ -75,7 +75,7 @@ watermark(['/img/field.jpg'])
 
   <script>
     // simple composite image
-    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+    watermark(['img/shepherd.jpg', 'img/logo.png'])
       .image(watermark.image.lowerRight())
       .then(function (img) {
         var pre = document.querySelector('#composite-image pre');
@@ -83,7 +83,7 @@ watermark(['/img/field.jpg'])
       });
 
     // a composite image with transparent watermark
-    watermark(['/img/forest.jpg', '/img/logo.png'])
+    watermark(['img/forest.jpg', 'img/logo.png'])
       .image(watermark.image.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#alpha-image pre');
@@ -91,7 +91,7 @@ watermark(['/img/field.jpg'])
       });
 
     // simple text watermark
-    watermark(['/img/field.jpg'])
+    watermark(['img/field.jpg'])
       .image(watermark.text.lowerRight('MyPhoto', '28px serif', '#fff', 0.5))
       .then(function (img) {
         var pre = document.querySelector('#text pre');
