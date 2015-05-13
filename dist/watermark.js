@@ -377,14 +377,17 @@ var identity = require("../functions").identity;
 
 /**
  * Set the src of an image object and call the resolve function
+ * once it has loaded
  *
  * @param {Image} img
  * @param {String} src
  * @param {Function} resolve
  */
 function setAndResolve(img, src, resolve) {
+  img.onload = function () {
+    return resolve(img);
+  };
   img.src = src;
-  resolve(img);
 }
 function getLoader(resource) {
   var type = typeof resource;
