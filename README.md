@@ -79,6 +79,18 @@ The examples demonstrate using watermark images and text, as well as a demonstra
 of uploading a watermarked image to Amazon S3. It is the same content hosted at
 [http://brianium.github.io/watermarkjs/](http://brianium.github.io/watermarkjs/).
 
+##Motivation
+
+* Not every server has image libraries (shared hosting anyone?)
+* Not every server has reliable concurrency libs for efficient uploading (shared hosting anyone?)
+* JavaScript is fun and cool - more so with ES6
+
+Clearly watermarking on the client has some limitations when watermarking urls and on-page elements. The curious can find urls for non-watermarked images, but it is likely that most average users won't go down this path - keeping this soft barrier useful. However!...
+
+watermark.js has the ability to accept file inputs as a source for watermarking. This makes it easy to preview, watermark, and upload without the non-watermarked image ever becoming public. Check out the [uploading](http://brianium.github.io/watermarkjs/uploading.html) demo to see this in action.
+
+This tool certainly shines in admin or CMS environments where you want to generate watermarks and upload them asynchronously where it would not be possible or preferable on the server. One less thing the server has to do can be a good thing :)
+
 ##Suggestions? Improvements?
 
 Please open issues or pull requests if you have bugs/improvements.
