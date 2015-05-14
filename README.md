@@ -24,6 +24,18 @@ a single polyfill, then use `dist/watermark.js` or `dist/watermark.min.js`.
 If you are unsure or know you are not using any other ES6 libraries, then you should use `dist/watermark-polyfill.js` or `dist/watermark-polyfill.min.js`. This file includes the polyfill
 and is ready to be dropped in.
 
+##Installing
+
+watermark.js is available via npm and bower:
+
+```
+# install via npm
+$ npm install watermarkjs
+
+# install via bower
+$ bower install watermarkjs
+```
+
 ##Building
 
 Before building or testing, install all the deps:
