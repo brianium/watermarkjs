@@ -16,14 +16,6 @@ tested and work:
 
 Please feel free to update this list or submit a fix for a particular browser via a pull request.
 
-##watermark.js vs watermark-polyfill.js
-
-In order to use some of the ES6 features like promises, Babel provides a polyfill to enable functionality in current browsers. If you are using multiple Babel compiled projects and include
-a single polyfill, then use `dist/watermark.js` or `dist/watermark.min.js`.
-
-If you are unsure or know you are not using any other ES6 libraries, then you should use `dist/watermark-polyfill.js` or `dist/watermark-polyfill.min.js`. This file includes the polyfill
-and is ready to be dropped in.
-
 ##Installing
 
 watermark.js is available via npm and bower:
@@ -69,15 +61,18 @@ issues with Jest, Node 0.10.x is required to run the tests.
 
 ##Examples
 
-You can view examples and documentation by running the `server` task via npm:
+You can view examples and documentation by running the `sync` task via npm:
 
 ```
-$ npm run server
+$ npm run sync
 ```
-
 The examples demonstrate using watermark images and text, as well as a demonstration
 of uploading a watermarked image to Amazon S3. It is the same content hosted at
 [http://brianium.github.io/watermarkjs/](http://brianium.github.io/watermarkjs/).
+
+## Development
+
+Running `npm run dev` will start a browser and start watching source files for changes.
 
 ##Motivation
 
