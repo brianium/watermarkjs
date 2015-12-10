@@ -16,7 +16,7 @@
 <body>
   <div class="container">
 
-    <h1 class="text-center"><a href="/">watermark.js</a></h1>
+    <h1 class="text-center"><a href="/watermarkjs/">watermark.js</a></h1>
     <nav>
       <ul>
         <li><a href="images.html">images</a></li>
@@ -75,7 +75,7 @@ watermark(['/img/field.jpg'])
 
   <script>
     // simple composite image
-    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+    watermark(['img/shepherd.jpg', 'img/logo.png'])
       .image(watermark.image.lowerRight())
       .then(function (img) {
         var pre = document.querySelector('#composite-image pre');
@@ -83,7 +83,7 @@ watermark(['/img/field.jpg'])
       });
 
     // a composite image with transparent watermark
-    watermark(['/img/forest.jpg', '/img/logo.png'])
+    watermark(['img/forest.jpg', 'img/logo.png'])
       .image(watermark.image.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#alpha-image pre');
@@ -91,7 +91,7 @@ watermark(['/img/field.jpg'])
       });
 
     // simple text watermark
-    watermark(['/img/field.jpg'])
+    watermark(['img/field.jpg'])
       .image(watermark.text.lowerRight('MyPhoto', '28px serif', '#fff', 0.5))
       .then(function (img) {
         var pre = document.querySelector('#text pre');
