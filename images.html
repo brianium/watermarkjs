@@ -4,23 +4,22 @@
 <head>
   <meta charset="utf-8">
   <title>watermark.js - using images</title>
-  <script src="scripts/watermark-polyfill.js"></script>
+  <script src="/scripts/watermark.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
   <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 </head>
 
 <body>
-  <a class="hidden-sm hidden-xs" href="https://github.com/brianium/watermarkjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
   <div class="container">
 
-    <h1 class="text-center"><a href="index.html">watermark.js</a></h1>
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
     <nav>
       <ul>
-        <li><a href="#">images</a></li>
+        <li><a href="images.html">images</a></li>
         <li class="separator">-</li>
         <li><a href="text.html">text</a></li>
         <li class="separator">-</li>
@@ -40,7 +39,7 @@
         <h2>Lower Right</h2>
         <pre>
           <code class="javascript">
-watermark(['img/shepherd.jpg', 'img/logo.png'])
+watermark(['/img/shepherd.jpg', '/img/logo.png'])
   .image(watermark.image.lowerRight(0.5))
   .then(function (img) {
     document.getElementById('lower-right').appendChild(img);
@@ -53,7 +52,7 @@ watermark(['img/shepherd.jpg', 'img/logo.png'])
         <h2>Lower Left</h2>
         <pre>
           <code class="javascript">
-watermark(['img/forest.jpg', 'img/logo.png'])
+watermark(['/img/forest.jpg', '/img/logo.png'])
   .image(watermark.image.lowerLeft(0.5))
   .then(function (img) {
     document.getElementById('lower-left').appendChild(img);
@@ -66,7 +65,7 @@ watermark(['img/forest.jpg', 'img/logo.png'])
         <h2>Upper Right</h2>
         <pre>
           <code class="javascript">
-watermark(['img/field.jpg', 'img/logo.png'])
+watermark(['/img/field.jpg', '/img/logo.png'])
   .image(watermark.image.upperRight(0.5))
   .then(function (img) {
     document.getElementById('upper-right').appendChild(img);
@@ -79,7 +78,7 @@ watermark(['img/field.jpg', 'img/logo.png'])
         <h2>Upper Left</h2>
         <pre>
           <code class="javascript">
-watermark(['img/wolf.jpg', 'img/logo.png'])
+watermark(['/img/wolf.jpg', '/img/logo.png'])
   .image(watermark.image.upperLeft(0.5))
   .then(function (img) {
     document.getElementById('upper-left').appendChild(img);
@@ -92,7 +91,7 @@ watermark(['img/wolf.jpg', 'img/logo.png'])
         <h2>Center</h2>
         <pre>
           <code class="javascript">
-watermark(['img/coffee.jpg', 'img/logo.png'])
+watermark(['/img/coffee.jpg', '/img/logo.png'])
   .image(watermark.image.center(0.5))
   .then(function (img) {
     document.getElementById('center').appendChild(img);
@@ -114,7 +113,7 @@ var getY = function(boat, logo) {
 };
 
 // atPos is the basis for all positioning functions
-watermark(['img/boat.jpg', 'img/logo.png'])
+watermark(['/img/boat.jpg', '/img/logo.png'])
   .image(watermark.image.atPos(getX, getY, 0.5))
   .then(function (img) {
     document.getElementById('arbitrary').appendChild(img);
@@ -128,9 +127,9 @@ watermark(['img/boat.jpg', 'img/logo.png'])
         <pre>
           <code class="javascript">
 // using load to draw additional images
-watermark(['img/boat.jpg', 'img/logo.png'])
+watermark(['/img/boat.jpg', '/img/logo.png'])
   .image(watermark.image.lowerRight(0.5))
-  .load(['img/peridot.png'])
+  .load(['/img/peridot.png'])
   .image(watermark.image.upperLeft(0.5))
   .then(function (img) {
     document.getElementById('multiple').appendChild(img);
@@ -145,7 +144,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
 
   <script>
     // lower right positioning
-    watermark(['img/shepherd.jpg', 'img/logo.png'])
+    watermark(['/img/shepherd.jpg', '/img/logo.png'])
       .image(watermark.image.lowerRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#lower-right pre');
@@ -153,7 +152,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       });
 
     // lower left positioning
-    watermark(['img/forest.jpg', 'img/logo.png'])
+    watermark(['/img/forest.jpg', '/img/logo.png'])
       .image(watermark.image.lowerLeft(0.5))
       .then(function (img) {
         var pre = document.querySelector('#lower-left pre');
@@ -161,7 +160,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       });
 
     // upper right positioning
-    watermark(['img/field.jpg', 'img/logo.png'])
+    watermark(['/img/field.jpg', '/img/logo.png'])
       .image(watermark.image.upperRight(0.5))
       .then(function (img) {
         var pre = document.querySelector('#upper-right pre');
@@ -169,7 +168,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       });
 
     // upper left positioning
-    watermark(['img/wolf.jpg', 'img/logo.png'])
+    watermark(['/img/wolf.jpg', '/img/logo.png'])
       .image(watermark.image.upperLeft(0.5))
       .then(function (img) {
         var pre = document.querySelector('#upper-left pre');
@@ -177,7 +176,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       });
 
     // upper left positioning
-    watermark(['img/coffee.jpg', 'img/logo.png'])
+    watermark(['/img/coffee.jpg', '/img/logo.png'])
       .image(watermark.image.center(0.5))
       .then(function (img) {
         var pre = document.querySelector('#center pre');
@@ -193,7 +192,7 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       return 63;
     };
 
-    watermark(['img/boat.jpg', 'img/logo.png'])
+    watermark(['/img/boat.jpg', '/img/logo.png'])
       .image(watermark.image.atPos(getX, getY, 0.5))
       .then(function (img) {
         var pre = document.querySelector('#arbitrary pre');
@@ -201,9 +200,9 @@ watermark(['img/boat.jpg', 'img/logo.png'])
       });
 
     // multiple images
-    watermark(['img/boat.jpg', 'img/logo.png'])
+    watermark(['/img/boat.jpg', '/img/logo.png'])
       .image(watermark.image.lowerRight(0.5))
-      .load(['img/peridot.png'])
+      .load(['/img/peridot.png'])
       .image(watermark.image.upperLeft(0.5))
       .then(function (img) {
         var pre = document.querySelector('#multiple pre');

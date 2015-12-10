@@ -4,25 +4,24 @@
 <head>
   <meta charset="utf-8">
   <title>watermark.js - using images</title>
-  <script src="scripts/watermark-polyfill.js"></script>
+  <script src="/scripts/watermark.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
   <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 </head>
 
 <body>
-  <a class="hidden-sm hidden-xs" href="https://github.com/brianium/watermarkjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
   <div class="container">
 
-    <h1 class="text-center"><a href="index.html">watermark.js</a></h1>
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
     <nav>
       <ul>
         <li><a href="images.html">images</a></li>
         <li class="separator">-</li>
-        <li><a href="#">text</a></li>
+        <li><a href="text.html">text</a></li>
         <li class="separator">-</li>
         <li><a href="uploading.html">uploading</a></li>
         <li class="separator">-</li>
@@ -42,7 +41,7 @@
         <h2>Lower Right</h2>
         <pre>
           <code class="javascript">
-watermark(['img/shepherd.jpg'])
+watermark(['/img/shepherd.jpg'])
   .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
   .then(function (img) {
     document.getElementById('lower-right').appendChild(img);
@@ -55,7 +54,7 @@ watermark(['img/shepherd.jpg'])
         <h2>Lower Left</h2>
         <pre>
           <code class="javascript">
-watermark(['img/forest.jpg'])
+watermark(['/img/forest.jpg'])
   .image(text.lowerLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5))
   .then(function (img) {
     document.getElementById('lower-left').appendChild(img);
@@ -71,7 +70,7 @@ watermark(['img/forest.jpg'])
 // TextMetrics objects do not support font height very well
 // so we manually provide a y value of 48 here
 var ur = text.upperRight;
-watermark(['img/field.jpg'])
+watermark(['/img/field.jpg'])
   .image(ur('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
   .then(function (img) {
     document.getElementById('upper-right').appendChild(img);
@@ -87,7 +86,7 @@ watermark(['img/field.jpg'])
 // TextMetrics objects do not support font height very well
 // so we manually provide a y value of 48 here
 var ul = text.upperLeft;
-watermark(['img/wolf.jpg'])
+watermark(['/img/wolf.jpg'])
   .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
   .then(function (img) {
     document.getElementById('upper-left').appendChild(img);
@@ -100,7 +99,7 @@ watermark(['img/wolf.jpg'])
         <h2>Center</h2>
         <pre>
           <code class="javascript">
-watermark(['img/coffee.jpg'])
+watermark(['/img/coffee.jpg'])
   .image(text.center('watermark.js', '48px Josefin Slab', '#fff', 0.5))
   .then(function (img) {
     document.getElementById('center').appendChild(img);
@@ -123,7 +122,7 @@ var y = function(boat, metrics, context) {
 
 pos = text.atPos;
 
-watermark(['img/boat.jpg'])
+watermark(['/img/boat.jpg'])
   .image(pos(x, y, 'watermark.js', '48px Josefin Slab', '#fff', 0.5))
   .then(function (img) {
     document.getElementById('arbitrary').appendChild(img);
@@ -155,7 +154,7 @@ var rotate = function(target) {
   return target;
 };
 
-watermark(['img/bear.jpg'])
+watermark(['/img/bear.jpg'])
   .image(rotate)
   .then(function (img) {
     document.getElementById('rotate').appendChild(img);
@@ -171,7 +170,7 @@ watermark(['img/bear.jpg'])
 // by chaining off of render() we can write on top
 // of our image that has already been watermarked
 var ul = text.upperLeft;
-watermark(['img/shepherd.jpg'])
+watermark(['/img/shepherd.jpg'])
   .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
   .render()
   .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
@@ -191,35 +190,35 @@ watermark(['img/shepherd.jpg'])
       // lower right positioning
       var text = watermark.text;
 
-      watermark(['img/shepherd.jpg'])
+      watermark(['/img/shepherd.jpg'])
         .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
         .then(function (img) {
           var pre = document.querySelector('#lower-right pre');
           pre.parentNode.insertBefore(img, pre);
         });
 
-      watermark(['img/forest.jpg'])
+      watermark(['/img/forest.jpg'])
         .image(text.lowerLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5))
         .then(function (img) {
           var pre = document.querySelector('#lower-left pre');
           pre.parentNode.insertBefore(img, pre);
         });
 
-      watermark(['img/field.jpg'])
+      watermark(['/img/field.jpg'])
         .image(text.upperRight('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
         .then(function (img) {
           var pre = document.querySelector('#upper-right pre');
           pre.parentNode.insertBefore(img, pre);
         });
 
-      watermark(['img/wolf.jpg'])
+      watermark(['/img/wolf.jpg'])
         .image(text.upperLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
         .then(function (img) {
           var pre = document.querySelector('#upper-left pre');
           pre.parentNode.insertBefore(img, pre);
         });
 
-      watermark(['img/coffee.jpg'])
+      watermark(['/img/coffee.jpg'])
         .image(text.center('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
         .then(function (img) {
           var pre = document.querySelector('#center pre');
@@ -235,7 +234,7 @@ watermark(['img/shepherd.jpg'])
       };
 
       pos = text.atPos;
-      watermark(['img/boat.jpg'])
+      watermark(['/img/boat.jpg'])
         .image(pos(x, y, 'watermark.js', '48px Josefin Slab', '#fff', 0.5))
         .then(function (img) {
           var pre = document.querySelector('#arbitrary pre');
@@ -258,14 +257,14 @@ watermark(['img/shepherd.jpg'])
         return target;
       };
 
-      watermark(['img/bear.jpg'])
+      watermark(['/img/bear.jpg'])
         .image(rotate)
         .then(function (img) {
           var pre = document.querySelector('#rotate pre');
           pre.parentNode.insertBefore(img, pre);
         });
 
-      watermark(['img/shepherd.jpg'])
+      watermark(['/img/shepherd.jpg'])
         .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
         .render()
         .image(text.upperLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
