@@ -7,9 +7,11 @@
     "test": "jest",
     "bundle": "browserify -s watermark --bare -p browserify-derequire -t [ babelify --presets [ es2015 ] ] index.js > dist/watermark.js",
     "minify": "uglifyjs --compress --mangle --screw-ie8 -o dist/watermark.min.js dist/watermark.js",
-    "start": "browser-sync start --server examples --index index.html --files 'dist/**/*.css, dist/**/*.html, dist/scripts/upload.js' --port 4000",
+    "sync": "browser-sync start --server examples --index index.html --files 'examples/**/*.css, examples/**/*.html, examples/**/*.js' --port 4000",
     "copy-dist": "cp dist/* examples/scripts",
-    "build": "npm run bundle && npm run minify && npm run copy-dist"
+    "watch": "watch 'npm run build' lib",
+    "build": "npm run bundle && npm run minify && npm run copy-dist",
+    "dev": "npm run watch & npm run sync"
   },
   "repository": {
     "type": "git",
@@ -36,7 +38,8 @@
     "browser-sync": "^2.10.0",
     "browserify": "^12.0.1",
     "browserify-derequire": "^0.9.4",
-    "jest-cli": "^0.8.1"
+    "jest-cli": "^0.8.1",
+    "watch": "^0.16.0"
   },
   "jest": {
     "setupEnvScriptFile": "jestEnvironment.js",
