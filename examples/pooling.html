@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>watermark.js - canvas pooling</title>
+  <script src="/scripts/watermark.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+</head>
+
+<body>
+  <div class="container" id="pooling-example">
+
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
+    <nav>
+      <ul>
+        <li><a href="images.html">images</a></li>
+        <li class="separator">-</li>
+        <li><a href="text.html">text</a></li>
+        <li class="separator">-</li>
+        <li><a href="uploading.html">uploading</a></li>
+        <li class="separator">-</li>
+        <li><a href="pooling.html">pooling</a></li>
+        <li class="separator">-</li>
+        <li><a href="docs.html">documentation</a></li>
+      </ul>
+    </nav>
+
+    <p class="lead">
+      watermark.js leverages canvas pooling so canvases are reused when possible
+    </p>
+
+    <div class="row">
+      <div class="col-md-4" id="image-1"></div>
+      <div class="col-md-4" id="image-2"></div>
+      <div class="col-md-4" id="image-3"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-4" id="image-4"></div>
+      <div class="col-md-4" id="image-5"></div>
+      <div class="col-md-4" id="image-6"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-4" id="image-7"></div>
+      <div class="col-md-4" id="image-8"></div>
+      <div class="col-md-4" id="image-9"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 example">
+        <pre>
+          <code class="javascript">
+/**
+ * Place a watermark
+ */
+function placeMark(i) {
+  watermark(['/img/shepherd.jpg', '/img/logo.png'])
+    .image(watermark.image.lowerRight())
+    .then(function (img) {
+      var container = document.getElementById('image-' + (i + 1));
+      container.appendChild(img);
+    });
+}
+
+/**
+ * Queue up a bunch of async watermark operations
+ */
+ for(var i = 0; i < 9; i++) {
+   setTimeout((function(index) {
+     return function() {
+       placeMark(index);
+     };
+   })(i), 10);
+ }
+          </code>
+        </pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function placeMark(i) {
+    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+      .image(watermark.image.lowerRight())
+      .then(function (img) {
+        var container = document.getElementById('image-' + (i + 1));
+        container.appendChild(img);
+      });
+  }
+
+  /**
+   * Queue up a bunch of async watermark operations
+   */
+  for(var i = 0; i < 9; i++) {
+    setTimeout((function(index) {
+      return function() {
+        placeMark(index);
+      };
+    })(i), 10);
+  }
+  </script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
