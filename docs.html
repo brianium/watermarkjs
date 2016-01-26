@@ -24,6 +24,8 @@
         <li class="separator">-</li>
         <li><a href="uploading.html">uploading</a></li>
         <li class="separator">-</li>
+        <li><a href="pooling.html">pooling</a></li>
+        <li class="separator">-</li>
         <li><a href="docs.html">documentation</a></li>
       </ul>
     </nav>
@@ -187,6 +189,21 @@ watermark(['/img/shepherd.jpg'])
   .then(function (img) {
     document.getElementById('#preview').appendChild(img);
   });
+          </code>
+        </pre>
+
+        <h2 id="pool">destroy()</h2>
+
+        <p>
+          watermark.js makes use of a canvas pool to reuse resources as much as possible. This is accomplished
+          with a shared pool. The <code>destroy()</code> function on the <code>watermark()</code> factory explicitly destroys all remaining
+          canvas references in the pool and should be used to clean up after doing a bunch of watermark operations.
+        </p>
+
+        <pre>
+          <code class="javascript">
+// remove any remaining canvas references
+watermark.destroy();
           </code>
         </pre>
 
@@ -374,6 +391,7 @@ function myRadRotateFunction(alpha) {
             <li><a href="#then">then()</a></li>
             <li><a href="#load">load()</a></li>
             <li><a href="#render">render()</a></li>
+            <li><a href="#pool">pool</a></li>
             <li>
               <a href="#styles">styles</a>
               <ul>
