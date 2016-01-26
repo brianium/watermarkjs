@@ -59,7 +59,7 @@
  * Place a watermark
  */
 function placeMark(i) {
-  watermark(['/img/shepherd.jpg', '/img/logo.png'])
+  watermark(['img/shepherd.jpg', 'img/logo.png'])
     .image(watermark.image.lowerRight())
     .then(function (img) {
       var container = document.getElementById('image-' + (i + 1));
@@ -85,7 +85,7 @@ function placeMark(i) {
 
   <script>
   function placeMark(i) {
-    watermark(['/img/shepherd.jpg', '/img/logo.png'])
+    watermark(['img/shepherd.jpg', 'img/logo.png'])
       .image(watermark.image.lowerRight())
       .then(function (img) {
         var container = document.getElementById('image-' + (i + 1));
