@@ -33,12 +33,13 @@
     <div class="row">
       <div class="col-md-9">
 
-        <h2 id="watermark">watermark(resources, [, init, [, promise]])</h2>
+        <h2 id="watermark">watermark(resources, [, options, [, promise]])</h2>
         <p>
           The watermark factory. Loads resources and returns an object with functions
           for manipulating them. <code>resources</code> can be a mixed array of any of the
-          following: url, <code>File</code>, <code>Blob</code>, or <code>Image</code>. The <code>init</code>
-          function is used when loading images from a url, and is invoked with the image before fetching.
+          following: url, <code>File</code>, <code>Blob</code>, or <code>Image</code>. The <code>options</code>
+          object is used to configure the watermark factory. For now it supports an <code>init</code>
+          function that is used when loading images from a url, and is invoked with the image before fetching.
         </p>
         <pre>
           <code class="javascript">
@@ -46,9 +47,12 @@
 watermark(['/img/coffee.jpg', '/img/logo.png']);
 
 // load cross domain images
-watermark(['http://web.com/a.jpg', 'http://web.com/b.jpg'], function (img) {
-  img.crossOrigin = 'anonymous';
-});
+var options = {
+  init: function (img) {
+    img.crossOrigin = 'anonymous';
+  }
+};
+watermark(['http://web.com/a.jpg', 'http://web.com/b.jpg'], options);
 
 // load a url and a file object
 var upload = document.querySelector('input[type=file]').files[0];
