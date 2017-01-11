@@ -3,6 +3,10 @@
 A functional library for watermarking images in the browser. Written with ES6, and made available
 to current browsers via [Babel](https://babeljs.io/). Supports urls, file inputs, blobs, and on-page images.
 
+**Note:**
+For anyone that is interested: I ported this to a ClojureScript library called
+[Dandy Roll](https://github.com/brianium/dandy-roll).
+
 ##Tested Browsers
 
 Any browser supporting [File](https://developer.mozilla.org/en-US/docs/Web/API/File#Browser_compatibility) and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Browser_compatibility) should work. The following browsers have been
