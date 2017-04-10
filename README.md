@@ -1,4 +1,4 @@
-#watermark.js [![Build Status](https://travis-ci.org/brianium/watermarkjs.svg?branch=master)](https://travis-ci.org/brianium/watermarkjs)
+# watermark.js [![Build Status](https://travis-ci.org/brianium/watermarkjs.svg?branch=master)](https://travis-ci.org/brianium/watermarkjs)
 
 A functional library for watermarking images in the browser. Written with ES6, and made available
 to current browsers via [Babel](https://babeljs.io/). Supports urls, file inputs, blobs, and on-page images.
@@ -7,7 +7,7 @@ to current browsers via [Babel](https://babeljs.io/). Supports urls, file inputs
 For anyone that is interested: I ported this to a ClojureScript library called
 [Dandy Roll](https://github.com/brianium/dandy-roll).
 
-##Tested Browsers
+## Tested Browsers
 
 Any browser supporting [File](https://developer.mozilla.org/en-US/docs/Web/API/File#Browser_compatibility) and [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Browser_compatibility) should work. The following browsers have been
 tested and work:
@@ -20,7 +20,7 @@ tested and work:
 
 Please feel free to update this list or submit a fix for a particular browser via a pull request.
 
-##Installing
+## Installing
 
 watermark.js is available via npm and bower:
 
@@ -32,7 +32,7 @@ $ npm install watermarkjs
 $ bower install watermarkjs
 ```
 
-##Usage
+## Usage
 
 ```js
 // watermark by local path
@@ -57,7 +57,7 @@ watermark(['http://host.com/photo.jpg', 'http://host.com/logo.png'], options)
   .then(img => document.getElementById('container').appendChild(img));
 ```
 
-##Building
+## Building
 
 Before building or testing, install all the deps:
 
@@ -77,7 +77,7 @@ Or to kick off the file watcher and build as you make changes, run the start tas
 $ npm start
 ```
 
-##Testing
+## Testing
 
 There is an npm script for that too!:
 
@@ -88,7 +88,7 @@ $ npm test
 This library uses the [Jest](https://facebook.github.io/jest/) testing framework. Due to some current
 issues with Jest, Node 0.10.x is required to run the tests.
 
-##Examples
+## Examples
 
 You can view examples and documentation by running the `sync` task via npm:
 
@@ -103,7 +103,7 @@ of uploading a watermarked image to Amazon S3. It is the same content hosted at
 
 Running `npm run dev` will start a browser and start watching source files for changes.
 
-##Motivation
+## Motivation
 
 * Not every server has image libraries (shared hosting anyone?)
 * Not every server has reliable concurrency libs for efficient uploading (shared hosting anyone?)
@@ -115,6 +115,6 @@ watermark.js has the ability to accept file inputs as a source for watermarking.
 
 This tool certainly shines in admin or CMS environments where you want to generate watermarks and upload them asynchronously where it would not be possible or preferable on the server. One less thing the server has to do can be a good thing :)
 
-##Suggestions? Improvements?
+## Suggestions? Improvements?
 
 Please open issues or pull requests if you have bugs/improvements.
