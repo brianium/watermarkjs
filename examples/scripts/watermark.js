@@ -52,29 +52,27 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
 	module.exports = __webpack_require__(2).default;
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
-
-	// required to safely use babel/register within a browserify codebase
+/***/ (function(module, exports) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	exports["default"] = function () {};
+	exports.default = function () {};
 
 	module.exports = exports["default"];
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -108,6 +106,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @typedef {Object} Options
 	 * @property {Function} init - an initialization function that is given Image objects before loading (only applies if resources is a collection of urls)
+	 * @property {ImageFormat} type - specify the image format to be used when retrieving result (only supports "image/png" or "image/jpeg", default "image/png")
+	 * @property {Number} encoderOptions - specify the image compression quality from 0 to 1 (default 0.92)
 	 * @property {Number} poolSize - number of canvas elements available for drawing,
 	 * @property {CanvasPool} pool - the pool used. If provided, poolSize will be ignored
 	 */
@@ -117,16 +117,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Options}
 	 */
 	var defaults = {
-	  init: function init() {}
-	};
+	  init: function init() {},
+	  type: 'image/png',
+	  encoderOptions: 0.92
 
-	/**
-	 * Merge the given options with the defaults
-	 *
-	 * @param {Options} options
-	 * @return {Options}
-	 */
-	function mergeOptions(options) {
+	  /**
+	   * Merge the given options with the defaults
+	   *
+	   * @param {Options} options
+	   * @return {Options}
+	   */
+	};function mergeOptions(options) {
 	  return (0, _object.extend)((0, _object.clone)(defaults), options);
 	}
 
@@ -138,11 +139,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {CanvasPool} pool
 	 * @return  {String}
 	 */
-	function release(result, pool) {
-	  var canvas = result.canvas;
-	  var sources = result.sources;
+	function release(result, pool, parameters) {
+	  var canvas = result.canvas,
+	      sources = result.sources;
 
-	  var dataURL = (0, _canvas.dataUrl)(canvas);
+	  var dataURL = (0, _canvas.dataUrl)(canvas, parameters);
 	  sources.forEach(pool.release);
 	  return dataURL;
 	}
@@ -157,8 +158,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Object}
 	 */
 	function watermark(resources) {
-	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	  var promise = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  var promise = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
 	  var opts = mergeOptions(options);
 	  promise || (promise = (0, _image.load)(resources, opts.init));
@@ -171,18 +172,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Function} draw
 	     * @return {Object}
 	     */
-
 	    dataUrl: function dataUrl(draw) {
 	      var promise = this.then(function (images) {
 	        return (0, _image.mapToCanvas)(images, _pool2.default);
 	      }).then(function (canvases) {
 	        return style.result(draw, canvases);
 	      }).then(function (result) {
-	        return release(result, _pool2.default);
+	        return release(result, _pool2.default, { type: opts.type, encoderOptions: opts.encoderOptions });
 	      });
 
 	      return watermark(resources, opts, promise);
 	    },
+
 
 	    /**
 	     * Load additional resources
@@ -199,6 +200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return watermark(resources, opts, promise);
 	    },
 
+
 	    /**
 	     * Render the current state of the watermarked image. Useful for performing
 	     * actions after the watermark has been applied
@@ -213,6 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return watermark(resources, opts, promise);
 	    },
 
+
 	    /**
 	     * Convert the watermark into a blob
 	     *
@@ -225,6 +228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return watermark(resources, opts, promise);
 	    },
 
+
 	    /**
 	     * Convert the watermark into an image using the given draw function
 	     *
@@ -236,6 +240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return watermark(resources, opts, promise);
 	    },
+
 
 	    /**
 	     * Delegate to the watermark promise
@@ -265,15 +270,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return _pool2.default.clear();
 	};
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	exports.getLoader = getLoader;
 	exports.load = load;
 	exports.loadUrl = loadUrl;
@@ -283,8 +291,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.mapToCanvas = mapToCanvas;
 
 	var _functions = __webpack_require__(4);
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 	/**
 	 * Set the src of an image object and call the resolve function
@@ -434,9 +440,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	}
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -474,11 +480,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return x;
 	}
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -488,15 +494,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Get the data url of a canvas
 	 *
 	 * @param {HTMLCanvasElement}
+	 * @param {Paramters} Specifications according to HTMLCanvasElement.toDataURL() Documentation
 	 * @return {String}
 	 */
 	function dataUrl(canvas) {
-	  return canvas.toDataURL();
+	  var parameters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { type: 'image/png', encoderOptions: 0.92 };
+
+	  return canvas.toDataURL(parameters.type, parameters.encoderOptions);
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -561,9 +570,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Blob([uint8(blob[0])], { type: blob[1] });
 	});
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -607,9 +616,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -719,9 +728,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, alpha);
 	}
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -852,9 +861,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, text, font, fillStyle, alpha);
 	}
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -888,9 +897,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return extend({}, obj);
 	}
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -926,7 +935,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @return {HTMLCanvasElement}
 	     */
-
 	    pop: function pop() {
 	      if (this.length === 0) {
 	        canvases.push(document.createElement('canvas'));
@@ -934,6 +942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return canvases.pop();
 	    },
+
 
 	    /**
 	     * Return the number of available canvas elements in the pool
@@ -956,12 +965,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvases.push(canvas);
 	    },
 
+
 	    /**
 	     * Empty the pool, destroying any references to canvas objects
 	     */
 	    clear: function clear() {
 	      canvases.splice(0, canvases.length);
 	    },
+
 
 	    /**
 	     * Return the collection of canvases in the pool
@@ -977,7 +988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var shared = CanvasPool();
 	exports.default = shared;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
