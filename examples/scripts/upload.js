@@ -55,6 +55,7 @@
     watermark([file])
       .image(function(target) { return target;  })
       .then(function (img) {
+        resetPreviewImage();
         document.getElementById('preview').appendChild(img);
       });
   }
@@ -64,7 +65,7 @@
    */
   function setWatermark(file) {
     var preview = document.getElementById('preview'),
-        img = preview.querySelector('img'),
+        img = document.getElementById('target').files[0],
         position = document.querySelector('input[type=radio]:checked').value;
 
     if (! original) {
@@ -74,9 +75,27 @@
     watermark([original, file])
       .image(watermark.image[position](0.5))
       .then(function(marked) {
-        preview.replaceChild(marked, img);
+
+
+
+        resetPreviewImage();
+        document.getElementById('preview').appendChild(marked);
+
         enableFields(awsFields);
       });
+  }
+
+
+  function resetPreviewImage()
+  {
+      var imageTag = document.querySelector("#preview img");
+      if(imageTag != null)
+      {
+          imageTag.remove();
+          original = null;
+          setWatermark(document.getElementById("watermark").files[0]);
+
+      }
   }
 
   /**
