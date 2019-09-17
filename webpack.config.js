@@ -1,7 +1,9 @@
 const path = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: "./index",
+  mode: 'development',
   output: {
     path: __dirname + "/dist",
     filename: "watermark.js",
@@ -9,7 +11,7 @@ module.exports = {
     libraryTarget: "umd"
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
