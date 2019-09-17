@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:brianium/watermarkjs.git"
+    "url": "git@github.com:mateusmoura/watermarkjs.git"
   },
   "keywords": [
     "canvas",
@@ -29,9 +29,9 @@
   "author": "Brian Scaturro <scaturrob@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brianium/watermarkjs/issues"
+    "url": "https://github.com/mateusmoura/watermarkjs/issues"
   },
-  "homepage": "https://github.com/brianium/watermarkjs",
+  "homepage": "https://github.com/mateusmoura/watermarkjs",
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.5.5",
