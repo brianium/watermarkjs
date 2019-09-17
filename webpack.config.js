@@ -12,10 +12,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel',
-        query: {
-          presets: ['es2015']
-        },
+        loader: 'babel-loader',
         include: [
           path.resolve(__dirname, "lib")
         ]
