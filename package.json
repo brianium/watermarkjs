@@ -1,10 +1,13 @@
 {
   "name": "watermarkjs",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "Watermarked images in the browser",
   "main": "dist/watermark.js",
   "scripts": {
-    "test": "jest",
+    "test-debug": "jest --env=jsdom",
+    "test": "jest --env=jsdom --verbose --runInBand --detectOpenHandles",
+    "test-watch": "jest --env=jsdom --watch",
+    "test-coverage": "jest --env=jsdom --coverage",
     "bundle": "webpack",
     "minify": "uglifyjs --compress --mangle --screw-ie8 -o dist/watermark.min.js dist/watermark.js",
     "sync": "browser-sync start --server examples --index index.html --files 'examples/**/*.css, examples/**/*.html, examples/**/*.js' --port 4000",
@@ -15,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:brianium/watermarkjs.git"
+    "url": "git@github.com:mateusmoura/watermarkjs.git"
   },
   "keywords": [
     "canvas",
@@ -26,31 +29,28 @@
   "author": "Brian Scaturro <scaturrob@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brianium/watermarkjs/issues"
+    "url": "https://github.com/mateusmoura/watermarkjs/issues"
   },
-  "homepage": "https://github.com/brianium/watermarkjs",
+  "homepage": "https://github.com/mateusmoura/watermarkjs",
   "devDependencies": {
-    "babel-jest": "^6.0.1",
-    "babel-polyfill": "^6.3.14",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-register": "^6.3.13",
-    "babelify": "^7.2.0",
-    "browser-sync": "^2.10.0",
-    "browserify": "^12.0.1",
-    "browserify-derequire": "^0.9.4",
-    "jest-cli": "^0.8.1",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.5.5",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.7",
+    "browserify": "^16.5.0",
+    "browserify-derequire": "^1.0.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "enzyme-to-json": "^3.4.0",
+    "jest-cli": "^25.0.0",
     "node-notify": "^1.0.0",
-    "watch": "^0.16.0",
-    "webpack": "^1.12.9"
-  },
-  "jest": {
-    "setupEnvScriptFile": "jestEnvironment.js",
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "testFileExtensions": [
-      "js"
-    ],
-    "moduleFileExtensions": [
-      "js"
-    ]
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "watch": "^1.0.2",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
   }
 }
