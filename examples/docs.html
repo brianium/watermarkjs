@@ -37,8 +37,10 @@
           The watermark factory. Loads resources and returns an object with functions
           for manipulating them. <code>resources</code> can be a mixed array of any of the
           following: url, <code>File</code>, <code>Blob</code>, or <code>Image</code>. The <code>options</code>
-          object is used to configure the watermark factory. For now it supports an <code>init</code>
+          object is used to configure the watermark factory. It supports an <code>init</code>
           function that is used when loading images from a url, and is invoked with the image before fetching.
+          It also allows <code>type</code> and <code>encoderOptions</code> to modify the resulting image according
+          to <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL" target="_blank">HTMLCanvasElement.toDataURL()</a> paramters.
         </p>
         <pre>
           <code class="javascript">
@@ -52,6 +54,13 @@ var options = {
   }
 };
 watermark(['http://web.com/a.jpg', 'http://web.com/b.jpg'], options);
+
+// export resulting image as jpeg and lower the quality
+var options = {
+  type: 'image/jpeg',
+  encoderOptions: 0.6
+};
+watermark(['http://web.com/a.jpg'], options);
 
 // load a url and a file object
 var upload = document.querySelector('input[type=file]').files[0];
