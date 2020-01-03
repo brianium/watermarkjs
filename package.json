@@ -1,6 +1,6 @@
 {
   "name": "watermarkjs",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Watermarked images in the browser",
   "main": "dist/watermark.js",
   "scripts": {
