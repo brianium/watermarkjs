@@ -1,16 +1,15 @@
 {
   "name": "watermarkjs",
-  "version": "2.0.0",
+  "version": "2.1.0-rc.1",
   "description": "Watermarked images in the browser",
   "main": "dist/watermark.js",
   "scripts": {
     "test": "jest",
     "bundle": "webpack",
-    "minify": "uglifyjs --compress --mangle --screw-ie8 -o dist/watermark.min.js dist/watermark.js",
     "sync": "browser-sync start --server examples --index index.html --files 'examples/**/*.css, examples/**/*.html, examples/**/*.js' --port 4000",
     "copy-dist": "cp dist/* examples/scripts",
-    "watch": "watch 'npm run build' lib",
-    "build": "npm run bundle && npm run minify && npm run copy-dist && notify -t 'npm run build' -m 'complete'",
+    "watch": "watch \"npm run build\" lib",
+    "build": "npm run bundle && npm run copy-dist && notify -t 'npm run build' -m 'complete'",
     "dev": "npm run watch & npm run sync"
   },
   "repository": {
@@ -30,26 +29,30 @@
   },
   "homepage": "https://github.com/brianium/watermarkjs",
   "devDependencies": {
-    "babel-jest": "^6.0.1",
-    "babel-loader": "7.1.1",
-    "babel-polyfill": "^6.3.14",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-register": "^6.3.13",
-    "babelify": "^7.2.0",
-    "browser-sync": "^2.10.0",
-    "browserify": "^12.0.1",
-    "browserify-derequire": "^0.9.4",
-    "jest-cli": "^0.8.1",
-    "node-notify": "^1.0.0",
-    "watch": "^0.16.0",
-    "webpack": "^1.12.9"
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.7",
+    "browserify": "^16.5.0",
+    "browserify-derequire": "^1.0.1",
+    "jest-cli": "^24.9.0",
+    "node-notifier-cli": "^1.1.2",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "watch": "^1.0.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   },
   "jest": {
-    "setupEnvScriptFile": "jestEnvironment.js",
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "testFileExtensions": [
-      "js"
+    "setupFiles": [
+      "<rootDir>/jestEnvironment.js"
     ],
+    "transform": {
+      "\\.js$": [
+        "babel-jest"
+      ]
+    },
     "moduleFileExtensions": [
       "js"
     ]

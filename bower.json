@@ -1,7 +1,7 @@
 {
   "name": "watermarkjs",
   "main": "dist/watermark.js",
-  "version": "2.0.0",
+  "version": "2.1.0-rc.1",
   "homepage": "http://brianium.github.io/watermarkjs/",
   "authors": [
     "Brian Scaturro <scaturrob@gmail.com>"

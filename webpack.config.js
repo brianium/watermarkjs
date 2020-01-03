@@ -1,6 +1,7 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
+module.exports = [{
   entry: "./index",
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -8,13 +9,16 @@ module.exports = {
     library: "watermark",
     libraryTarget: "umd"
   },
+  optimization: {
+    minimize: false
+  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        query: {
-          presets: ['es2015']
+        options: {
+          presets: ['@babel/preset-env']
         },
         include: [
           path.resolve(__dirname, "lib")
@@ -22,4 +26,31 @@ module.exports = {
       }
     ]
   }
-}
+},{
+  entry: "./index",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "watermark.min.js",
+    library: "watermark",
+    libraryTarget: "umd"
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin()
+    ]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        },
+        include: [
+          path.resolve(__dirname, "lib")
+        ]
+      }
+    ]
+  }
+}]
