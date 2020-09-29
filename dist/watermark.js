@@ -7,7 +7,7 @@
 		exports["watermark"] = factory();
 	else
 		root["watermark"] = factory();
-})(window, function() {
+})(typeof window !== 'undefined'? window : null, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
